@@ -1,0 +1,38 @@
+import = [
+    "~/.config/alacritty/themes/gruvbox_dark.toml"
+]
+
+live_config_reload = true
+
+[window]
+decorations = "buttonless"
+dynamic_padding = false
+opacity = 1
+option_as_alt = "OnlyLeft"
+
+[window.padding]
+x = 10
+y = 10
+
+[font]
+size = 14.0
+
+[font.bold]
+family = "SfMono Nerd Font"
+style = "Heavy"
+
+[font.bold_italic]
+family = "SFMono Nerd Font"
+style = "Heavy Italic"
+
+[font.italic]
+family = "SfMono Nerd Font"
+style = "Medium Italic"
+
+[font.normal]
+family = "SFMono Nerd Font"
+style = "Medium"
+
+[env]
+
+
