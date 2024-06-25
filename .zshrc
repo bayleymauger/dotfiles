@@ -160,9 +160,16 @@ load-nvmrc() {
 
 add-zsh-hook chpwd load-nvmrc
 load-nvmrc
+# end NVM
 
 # ALIASES
 alias p="pnpm"
 alias box="pnpm box"
 alias lg="lazygit"
 alias vim="nvim"
+
+# Define the `..` and `...` shortcuts
+alias ..='cd ..'
+alias ...='cd ../..'
+alias ....='cd ../../..'
+alias .....='cd ../../../..'
