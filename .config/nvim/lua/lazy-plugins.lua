@@ -22,6 +22,7 @@ require("lazy").setup({
 	require("plugins.tmux"),
 	require("plugins.comment"),
 	require("plugins.gitsigns"),
+	require("plugins.lualine"),
 	require("plugins.which-key"),
 	require("plugins.telescope"),
 	require("plugins.harpoon"),

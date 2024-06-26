@@ -1,14 +1,8 @@
 import = [
-    "~/.config/alacritty/themes/gruvbox_dark.toml"
+    "~/.config/alacritty/themes/dracula.toml"
 ]
 
 live_config_reload = true
-
-
-[shell]
-# `where tmux` to find correct path
-program = "/opt/homebrew/bin/tmux"
-args = ["new-session", "-A", "-D", "-s", "main"]
 
 [window]
 decorations = "full"
