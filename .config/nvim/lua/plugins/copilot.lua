@@ -38,6 +38,7 @@ return {
 					},
 				},
 				filetypes = {
+					go = true,
 					typescript = true,
 					yaml = false,
 					markdown = false,
