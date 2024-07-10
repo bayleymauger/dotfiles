@@ -39,6 +39,7 @@ require("lazy").setup({
 	require("plugins.indent-blankline"),
 	require("plugins.lint"),
 	require("plugins.autopairs"),
+	require("plugins.autotag"),
 	require("plugins.neo-tree"),
 	require("plugins.lazygit"),
 	require("plugins.copilot"),
