@@ -4,6 +4,9 @@ import = [
 
 live_config_reload = true
 
+[shell]
+program = "/usr/bin/zsh"
+
 [window]
 decorations = "full"
 dynamic_padding = false
