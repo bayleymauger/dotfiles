@@ -172,6 +172,8 @@ return {
 				-- But for many setups, the LSP (`tsserver`) will work just fine
 				tsserver = {},
 
+				jsonls = {},
+
 				gopls = {},
 
 				lua_ls = {
