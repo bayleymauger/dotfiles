@@ -1,11 +1,6 @@
-import = [
-    "~/.config/alacritty/themes/dracula.toml"
-]
 
-live_config_reload = true
-
-[shell]
-program = "/bin/zsh"
+# [shell]
+# program = "/bin/zsh"
 
 [window]
 decorations = "full"
@@ -37,5 +32,12 @@ family = "SFMono Nerd Font"
 style = "Medium"
 
 [env]
+
+[general]
+
+live_config_reload = true
+import = [
+    "~/.config/alacritty/themes/dracula.toml"
+]
 
 
