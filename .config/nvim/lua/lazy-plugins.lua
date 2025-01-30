@@ -40,7 +40,7 @@ require("lazy").setup({
 	require("plugins.lint"),
 	require("plugins.autopairs"),
 	require("plugins.autotag"),
-	require("plugins.neo-tree"),
+	require("plugins.oil"),
 	require("plugins.lazygit"),
 	require("plugins.copilot"),
 	require("plugins.copilot-chat"),
