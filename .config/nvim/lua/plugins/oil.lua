@@ -10,19 +10,22 @@ function _G.get_oil_winbar()
 end
 
 return {
-	"stevearc/oil.nvim",
-	---@module 'oil'
-	---@type oil.SetupOpts
-	opts = {
-		win_options = {
-			winbar = "%!v:lua.get_oil_winbar()",
-		},
-		view_options = {
-			show_hidden = true,
-		},
+	{
+		"stevearc/oil.nvim",
+		-- Optional dependencies
+		dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
+		-- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+		lazy = false,
+		config = function()
+			require("oil").setup({
+				win_options = {
+					winbar = "%!v:lua.get_oil_winbar()",
+				},
+				view_options = {
+					show_hidden = true,
+				},
+			})
+			vim.api.nvim_set_keymap("n", "\\", ':lua require("oil").open()<CR>', { noremap = true, silent = true })
+		end,
 	},
-	-- Optional dependencies
-	dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
-	-- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
-	lazy = false,
 }
