@@ -11,12 +11,13 @@ return {
 		},
 		opts = {
 			debug = true,
+			model = "claude-3.5-sonnet",
 			window = {
 				width = 0.3,
 			},
 		},
 		keys = {
-			-- Toggle Copilit
+			-- Toggle Copilot
 			{
 				"<leader>ccp",
 				function()
