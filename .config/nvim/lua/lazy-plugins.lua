@@ -20,6 +20,7 @@ require("lazy").setup({
 	-- modular approach: using `require 'path.name'` will
 	-- include a plugin definition from file lua/path/name.lua
 	require("plugins.tmux"),
+	require("plugins.ts-comments"),
 	require("plugins.comment"),
 	require("plugins.gitsigns"),
 	require("plugins.lualine"),
@@ -67,5 +68,3 @@ require("lazy").setup({
 		},
 	},
 })
-
--- vim: ts=2 sts=2 sw=2 et

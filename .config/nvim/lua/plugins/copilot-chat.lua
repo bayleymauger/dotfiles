@@ -11,7 +11,7 @@ return {
 		},
 		opts = {
 			debug = true,
-			model = "claude-3.7-sonnet",
+			model = "claude-sonnet-4",
 			window = {
 				width = 0.3,
 			},

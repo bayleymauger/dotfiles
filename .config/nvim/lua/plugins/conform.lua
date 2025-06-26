@@ -40,6 +40,7 @@ return {
 				typescriptreact = { "prettierd", "prettier", stop_after_first = true },
 				json = { "prettierd", "prettier", stop_after_first = true },
 				go = { "gofmt", "goimports", stop_after_first = true },
+				terraform = { "terraform_fmt", "terraform_fmt", stop_after_first = true },
 			},
 		},
 	},
