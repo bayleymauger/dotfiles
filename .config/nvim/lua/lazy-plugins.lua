@@ -45,7 +45,7 @@ require("lazy").setup({
 	require("plugins.oil"),
 	require("plugins.lazygit"),
 	require("plugins.copilot"),
-	require("plugins.copilot-chat"),
+	require("plugins.code-companion"),
 	require("plugins.theme"),
 }, {
 	ui = {
