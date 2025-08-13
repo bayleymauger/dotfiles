@@ -1,0 +1,11 @@
+shell-integration = zsh
+font-family = JetBrains Mono
+theme = Dracula
+mouse-hide-while-typing = true
+scrollback-limit = 1000000
+
+keybind = super+r=reload_config
+
+window-save-state = always
+
+macos-option-as-alt = true
