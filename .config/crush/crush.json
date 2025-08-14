@@ -1,0 +1,29 @@
+{
+  "$schema": "https://charm.land/crush.json",
+  "lsp": {
+    "Go": {
+      "command": "gopls"
+    },
+    "TypeScript": {
+      "command": "typescript-language-server",
+      "args": ["--stdio"]
+    },
+    "Bash": {
+      "command": "bash-language-server",
+      "args": ["start"]
+    }
+  },
+  "mcp": {
+    "github": {
+      "type": "http",
+      "url": "https://api.githubcopilot.com/mcp/",
+      "headers": {
+        "Authorization": "$(echo Bearer $GITHUB_TOKEN)"
+      }
+    },
+    "context7": {
+      "type": "sse",
+      "url": "https://mcp.context7.com/sse"
+    }
+  }
+}

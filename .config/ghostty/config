@@ -1,11 +1,29 @@
 shell-integration = zsh
-font-family = JetBrains Mono
-theme = Dracula
-mouse-hide-while-typing = true
-scrollback-limit = 1000000
 
-keybind = super+r=reload_config
-
+window-decoration = true
+window-theme = "dark"
 window-save-state = always
+window-padding-balance = true
+window-height = 9999
+window-width = 9999
+
+auto-update-channel = tip
+confirm-close-surface = true
 
 macos-option-as-alt = true
+macos-titlebar-style = "hidden"
+
+cursor-style = block
+cursor-style-blink = true
+
+mouse-hide-while-typing = true
+
+clipboard-read = "allow"
+clipboard-paste-protection = false
+
+scrollback-limit = 1000000
+
+font-family = JetBrains Mono
+theme = Dracula
+
+custom-shader = ~/.config/ghostty/cursor.glsl
