@@ -70,3 +70,6 @@ vim.o.scrolloff = 10
 -- instead raise a dialog asking if you wish to save the current file(s)
 -- See `:help 'confirm'`
 vim.o.confirm = true
+
+-- Swap files are not useful for me
+vim.o.swapfile = false
