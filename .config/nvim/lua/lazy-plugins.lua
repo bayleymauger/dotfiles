@@ -45,7 +45,6 @@ require("lazy").setup({
 	require("plugins.oil"),
 	require("plugins.lazygit"),
 	require("plugins.copilot"),
-	require("plugins.mcp-hub"),
 	require("plugins.code-companion"),
 	require("plugins.theme"),
 }, {
