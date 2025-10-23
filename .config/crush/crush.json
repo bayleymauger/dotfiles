@@ -23,6 +23,7 @@
     },
     "context7": {
       "type": "sse",
+      "timeout": 30,
       "url": "https://mcp.context7.com/sse"
     }
   }

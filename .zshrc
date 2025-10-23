@@ -129,7 +129,10 @@ unset key
 # }}} End configuration added by Zim install
 
 
-
+# pyenv
+eval "$(pyenv init -)"
+if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
+# end pyenv
 
 # NVM
 export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
@@ -166,6 +169,7 @@ alias p="pnpm"
 alias box="pnpm box"
 alias lg="lazygit"
 alias vim="nvim"
+alias workstation="ssh root@$WORKSTATION_IP"
 
 # Define the `..` and `...` shortcuts
 alias ..='cd ..'

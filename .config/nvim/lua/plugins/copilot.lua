@@ -9,7 +9,7 @@ return {
 		require("copilot").setup({
 			suggestion = { enabled = false },
 			panel = { enabled = false },
-			copilot_node_command = vim.fn.expand("$HOME") .. "/.nvm/versions/node/v20.3.0/bin/node", -- Node.js version must be > 20
+			copilot_node_command = vim.fn.expand("$HOME") .. "/.nvm/versions/node/v22.20.0/bin/node", -- Node.js version must be > 22
 		})
 	end,
 }
