@@ -169,7 +169,7 @@ alias p="pnpm"
 alias box="pnpm box"
 alias lg="lazygit"
 alias vim="nvim"
-alias workstation="ssh root@$WORKSTATION_IP"
+alias workstation="ssh bayley@$WORKSTATION_IP"
 
 # Define the `..` and `...` shortcuts
 alias ..='cd ..'
