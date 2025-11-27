@@ -63,7 +63,6 @@ return {
 			--  All the info you're looking for is in `:help telescope.setup()`
 			--
 			defaults = {
-				file_ignore_patterns = { ".git/", "node_modules/" },
 				vimgrep_arguments = {
 					"rg",
 					"--color=never",
