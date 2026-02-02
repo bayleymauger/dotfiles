@@ -179,4 +179,4 @@ alias .....='cd ../../../..'
 
 export HOMEBREW_EDITOR=nvim
 
-export PATH="$HOME/bin:$PATH"
+export PATH="/usr/local/bin:$HOME/bin:$PATH"
