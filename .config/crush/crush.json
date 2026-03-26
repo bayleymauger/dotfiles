@@ -6,11 +6,15 @@
     },
     "TypeScript": {
       "command": "typescript-language-server",
-      "args": ["--stdio"]
+      "args": [
+        "--stdio"
+      ]
     },
     "Bash": {
       "command": "bash-language-server",
-      "args": ["start"]
+      "args": [
+        "start"
+      ]
     }
   },
   "mcp": {
@@ -25,6 +29,29 @@
       "type": "http",
       "timeout": 30,
       "url": "https://mcp.context7.com/mcp"
+    },
+    "fff": {
+      "type": "stdio",
+      "command": "fff-mcp"
     }
+  },
+  "permissions": {
+    "allowed_tools": [
+      "fff_multi_grep",
+      "fff_grep",
+      "fff_find_files",
+      "agentic_fetch",
+      "lsp_references",
+      "lsp_diagnostics",
+      "sourcegraph",
+      "read_mcp_resource",
+      "multiedit",
+      "view",
+      "ls",
+      "grep",
+      "fetch",
+      "write",
+      "edit"
+    ]
   }
 }
