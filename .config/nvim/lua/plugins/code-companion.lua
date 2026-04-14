@@ -33,15 +33,9 @@ return {
 		})
 
 		vim.keymap.set({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-		vim.keymap.set(
-			{ "n", "v" },
-			"<LocalLeader>c",
-			"<cmd>CodeCompanionChat Toggle<cr>",
-			{ noremap = true, silent = true }
-		)
+		vim.keymap.set({ "n", "v" }, "<LocalLeader>c", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
 		vim.keymap.set("v", "ca", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 
-		-- Expand 'cc' into 'CodeCompanion' in the command line
 		vim.cmd([[cab cc CodeCompanion]])
 
 		require("plugins.code-companion.fidget-spinner"):init()

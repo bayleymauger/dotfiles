@@ -4,16 +4,13 @@ function _G.get_oil_winbar()
 	if dir then
 		return vim.fn.fnamemodify(dir, ":~")
 	else
-		-- If there is no current directory (e.g. over ssh), just show the buffer name
 		return vim.api.nvim_buf_get_name(0)
 	end
 end
 
 return {
 	"stevearc/oil.nvim",
-	-- Optional dependencies
-	dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
-	-- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
+	dependencies = { "nvim-tree/nvim-web-devicons" },
 	lazy = false,
 	config = function()
 		require("oil").setup({
