@@ -28,7 +28,7 @@ This is a personal dotfiles repository using **GNU Stow** to symlink configurati
 │   │           └── tmux.lua
 │   └── opencode/               # OpenCode AI assistant config
 │       └── opencode.json
-├── .tmux.conf                  # tmux config (Dracula theme, TPM, vim-aware navigation)
+├── .tmux.conf                  # tmux config (tokyonight theme, TPM, vim-aware navigation)
 ├── .zimrc                      # Zim module/plugin declarations
 ├── .zshrc                      # Zsh config (aliases, NVM, pyenv, keybinds)
 └── README.md
@@ -133,10 +133,10 @@ Uses nvim-dap with Go (delve) support. Keymaps: `<F5>` continue, `<F1>` step in,
 - Plugin files use tab indentation in the Lua code
 
 ## Ghostty Terminal
-Uses JetBrains Mono font, Dracula theme, block cursor with blink, zsh shell integration. Custom cursor GLSL shader in `cursor.glsl`.
+Uses JetBrains Mono font, tokyonight theme, block cursor with blink, zsh shell integration. Custom cursor GLSL shader in `cursor.glsl`.
 
 ## tmux Configuration
-- Uses TPM (Tmux Plugin Manager) with Dracula theme, tmux-resurrect, tmux-sensible
+- Uses TPM (Tmux Plugin Manager) with tokyonight theme, tmux-resurrect, tmux-sensible
 - `xterm-ghostty` terminal type with truecolor
 - Seamless pane navigation between nvim and tmux via `<C-hjkl>` (checks if vim is active)
 - Pane resizing with `<M-hjkl>` (Alt)
