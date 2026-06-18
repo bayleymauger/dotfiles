@@ -324,6 +324,7 @@ do
   local servers = {
     ts_ls = {},
     stylua = {},
+    terraformls = {},
 
     -- Special Lua Config, as recommended by neovim help docs
     lua_ls = {
@@ -455,7 +456,7 @@ end
 do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
-  local parsers = { 'bash', 'c', 'diff', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'vim', 'vimdoc' }
+  local parsers = { 'bash', 'c', 'diff', 'hcl', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'terraform', 'vim', 'vimdoc' }
   for _, parser in ipairs(parsers) do
     require('nvim-treesitter').install(parser)
   end
