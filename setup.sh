@@ -77,96 +77,18 @@ install_packages_macos() {
 }
 
 install_packages_linux() {
-  info "Installing packages for $DISTRO..."
+  # Install Homebrew for Linux if not present
+  if ! command_exists brew; then
+    info "Installing Homebrew for Linux..."
+    /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
+    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+  else
+    info "Homebrew already installed"
+  fi
 
-  case "$DISTRO" in
-    ubuntu|debian|pop|mint|elementary)
-      sudo apt-get update -qq
-      sudo apt-get install -y -qq \
-        git stow curl wget make gcc \
-        tmux zsh python3 python3-pip \
-        xclip
-
-      # Neovim — install from PPA for latest version
-      if ! command_exists nvim; then
-        sudo add-apt-repository -y ppa:neovim-ppa/unstable
-        sudo apt-get update -qq
-        sudo apt-get install -y -qq neovim
-      fi
-
-      # tree-sitter
-      if ! command_exists tree-sitter; then
-        cargo install tree-sitter-cli 2>/dev/null || warn "Could not install tree-sitter (install rustup first)"
-      fi
-
-      # lazygit
-      if ! command_exists lazygit; then
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-        tar xf /tmp/lazygit.tar.gz -C /tmp lazygit
-        sudo install /tmp/lazygit /usr/local/bin/lazygit
-        rm -f /tmp/lazygit /tmp/lazygit.tar.gz
-      fi
-      ;;
-
-    fedora|rhel|centos|rocky|alma)
-      sudo dnf install -y \
-        git stow curl wget make gcc \
-        tmux zsh python3 python3-pip \
-        xclip
-
-      # Neovim
-      if ! command_exists nvim; then
-        sudo dnf install -y neovim
-      fi
-
-      # tree-sitter
-      if ! command_exists tree-sitter; then
-        cargo install tree-sitter-cli 2>/dev/null || warn "Could not install tree-sitter (install rustup first)"
-      fi
-
-      # lazygit
-      if ! command_exists lazygit; then
-        LAZYGIT_VERSION=$(curl -s "https://api.github.com/repos/jesseduffield/lazygit/releases/latest" | grep -Po '"tag_name": "v\K[^"]*')
-        curl -Lo /tmp/lazygit.tar.gz "https://github.com/jesseduffield/lazygit/releases/latest/download/lazygit_${LAZYGIT_VERSION}_Linux_x86_64.tar.gz"
-        tar xf /tmp/lazygit.tar.gz -C /tmp lazygit
-        sudo install /tmp/lazygit /usr/local/bin/lazygit
-        rm -f /tmp/lazygit /tmp/lazygit.tar.gz
-      fi
-      ;;
-
-    arch|manjaro|endeavouros)
-      sudo pacman -Sy --noconfirm \
-        git stow curl wget make gcc \
-        tmux zsh python python-pip \
-        xclip
-
-      # Neovim — install from community repo
-      if ! command_exists nvim; then
-        sudo pacman -S --noconfirm neovim
-      fi
-
-      # tree-sitter
-      if ! command_exists tree-sitter; then
-        sudo pacman -S --noconfirm tree-sitter 2>/dev/null || \
-          cargo install tree-sitter-cli 2>/dev/null || \
-          warn "Could not install tree-sitter"
-      fi
-
-      # lazygit
-      if ! command_exists lazygit; then
-        sudo pacman -S --noconfirm lazygit 2>/dev/null || \
-          warn "lazygit not in repos, install manually"
-      fi
-      ;;
-
-    *)
-      warn "Unsupported distro: $DISTRO — install packages manually"
-      warn "Required: git stow curl wget make gcc tmux zsh neovim tree-sitter lazygit python3"
-      ;;
-  esac
-
-  success "Linux packages installed"
+  info "Installing packages from Brewfile..."
+  brew bundle --file="$DOTFILES_DIR/Brewfile" --no-lock
+  success "All packages installed via Homebrew"
 }
 
 install_nerd_font() {
@@ -205,7 +127,6 @@ stow_packages() {
 
   # Stow individual root-level dotfiles
   stow .tmux.conf
-  stow .zimrc
   stow .zshrc
 
   success "All dotfiles stowed"
@@ -232,25 +153,29 @@ setup_tmux() {
 }
 
 # ---------------------------------------------------------------------------
-# Zim Framework
+# Zsh Plugins
 # ---------------------------------------------------------------------------
 
-setup_zim() {
-  local ZIM_DIR="$HOME/.zim"
+setup_zsh_plugins() {
+  mkdir -p ~/.zsh
 
-  if [ -d "$ZIM_DIR" ] && [ -f "$ZIM_DIR/zimfw.zsh" ]; then
-    info "Zim already installed"
+  if [ -d ~/.zsh/zsh-autosuggestions ]; then
+    info "zsh-autosuggestions already installed, updating..."
+    git -C ~/.zsh/zsh-autosuggestions pull --quiet
   else
-    info "Installing Zim framework..."
-    mkdir -p "$ZIM_DIR"
-    curl -fsSL --create-dirs -o "$ZIM_DIR/zimfw.zsh" \
-      https://github.com/zimfw/zimfw/releases/latest/download/zimfw.zsh
+    info "Cloning zsh-autosuggestions..."
+    git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
   fi
 
-  # Initialize zim (installs modules from .zimrc)
-  info "Initializing Zim modules..."
-  zsh -c "source $ZIM_DIR/zimfw.zsh init -q" 2>/dev/null || warn "Zim init had issues — open a new shell to complete"
-  success "Zim framework configured"
+  if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
+    info "zsh-syntax-highlighting already installed, updating..."
+    git -C ~/.zsh/zsh-syntax-highlighting pull --quiet
+  else
+    info "Cloning zsh-syntax-highlighting..."
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh/zsh-syntax-highlighting
+  fi
+
+  success "Zsh plugins installed"
 }
 
 # ---------------------------------------------------------------------------
@@ -316,11 +241,7 @@ setup_pyenv() {
     info "pyenv already installed"
   else
     info "Installing pyenv..."
-    if [ "$PLATFORM" = "macos" ]; then
-      brew install pyenv pyenv-virtualenv
-    else
-      curl -fsSL https://pyenv.run | bash
-    fi
+    brew install pyenv pyenv-virtualenv
   fi
 
   export PYENV_ROOT="$HOME/.pyenv"
@@ -410,7 +331,7 @@ main() {
   echo ""
   info "=== Post-setup initialization ==="
   setup_tmux
-  setup_zim
+  setup_zsh_plugins
   setup_neovim
   setup_nvm
   setup_pyenv
