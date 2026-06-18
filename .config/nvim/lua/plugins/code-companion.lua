@@ -15,7 +15,7 @@ return {
 						return require("codecompanion.adapters").extend("copilot", {
 							schema = {
 								model = {
-									default = "claude-sonnet-4",
+									default = "claude-sonnet-4.6",
 								},
 							},
 						})
@@ -33,7 +33,12 @@ return {
 		})
 
 		vim.keymap.set({ "n", "v" }, "<C-a>", "<cmd>CodeCompanionActions<cr>", { noremap = true, silent = true })
-		vim.keymap.set({ "n", "v" }, "<LocalLeader>c", "<cmd>CodeCompanionChat Toggle<cr>", { noremap = true, silent = true })
+		vim.keymap.set(
+			{ "n", "v" },
+			"<LocalLeader>c",
+			"<cmd>CodeCompanionChat Toggle<cr>",
+			{ noremap = true, silent = true }
+		)
 		vim.keymap.set("v", "ca", "<cmd>CodeCompanionChat Add<cr>", { noremap = true, silent = true })
 
 		vim.cmd([[cab cc CodeCompanion]])
