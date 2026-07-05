@@ -73,6 +73,8 @@ do
     group = vim.api.nvim_create_augroup('highlight-yank', { clear = true }),
     callback = function() vim.hl.on_yank() end,
   })
+
+  vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
 end
 
 -- ============================================================
