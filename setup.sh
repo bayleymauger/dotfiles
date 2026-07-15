@@ -72,7 +72,7 @@ install_packages_macos() {
   fi
 
   info "Installing packages from Brewfile..."
-  brew bundle --file="$DOTFILES_DIR/Brewfile" --no-lock
+  brew bundle --file="$DOTFILES_DIR/Brewfile"
   success "Homebrew packages installed"
 }
 

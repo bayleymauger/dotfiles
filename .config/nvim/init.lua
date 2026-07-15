@@ -34,6 +34,7 @@ do
   vim.o.scrolloff = 10
   vim.o.confirm = true
   vim.o.swapfile = false
+  vim.opt.relativenumber = true
 end
 
 -- ============================================================
@@ -67,6 +68,13 @@ do
   vim.keymap.set('n', '<C-l>', '<C-w><C-l>', { desc = 'Move focus to the right window' })
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
+  vim.keymap.set('n', '<leader>td', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, { desc = 'Toggle diagnostics' })
+  vim.keymap.set(
+    'n',
+    '<leader>lg',
+    '<cmd>!tmux display-popup -E -w 90\\% -h 90\\% -d ' .. vim.fn.shellescape(vim.fn.getcwd()) .. ' -- lazygit <CR><CR>',
+    { desc = 'Toggle lazygit' }
+  )
 
   vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
@@ -127,6 +135,9 @@ local function gh(repo) return 'https://github.com/' .. repo end
 -- guess-indent, gitsigns, which-key, colorscheme, todo-comments, mini modules
 -- ============================================================
 do
+  vim.cmd.packadd 'nvim.undotree'
+  vim.keymap.set('n', '<leader>u', require('undotree').open, { desc = 'Toggle Undotree' })
+
   vim.pack.add { gh 'NMAC427/guess-indent.nvim' }
   require('guess-indent').setup {}
 
@@ -292,6 +303,8 @@ do
       map('gra', vim.lsp.buf.code_action, '[G]oto Code [A]ction', { 'n', 'x' })
       map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
 
+      vim.api.nvim_create_user_command('LspRestart', function() vim.lsp.restart() end, {})
+
       local client = vim.lsp.get_client_by_id(event.data.client_id)
       if client and client:supports_method('textDocument/documentHighlight', event.buf) then
         local highlight_augroup = vim.api.nvim_create_augroup('lsp-highlight', { clear = false })
@@ -411,6 +424,8 @@ do
       lua = { 'stylua' },
       javascript = { 'prettierd', 'prettier', stop_after_first = true },
       typescript = { 'prettierd', 'prettier', stop_after_first = true },
+      html = { 'prettierd', 'prettier', stop_after_first = true },
+      css = { 'prettierd', 'prettier', stop_after_first = true },
       javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
       json = { 'prettierd', 'prettier', stop_after_first = true },
@@ -508,7 +523,10 @@ do
   require 'plugins.indent_line'
   require 'plugins.lint'
   require 'plugins.autopairs'
+  require 'plugins.ts_comments'
+  require 'plugins.trouble'
   require 'plugins.gitsigns' -- adds gitsigns recommended keymaps
   require 'plugins.tmux'
   require 'plugins.oil'
+  require 'plugins.opencode'
 end
