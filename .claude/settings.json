@@ -1,0 +1,12 @@
+{
+  "enabledMcpjsonServers": [
+    "github",
+    "context7",
+    "fff",
+    "playwright"
+  ],
+  "enabledPlugins": {
+    "superpowers@claude-plugins-official": true,
+    "gopls-lsp@claude-plugins-official": true
+  }
+}

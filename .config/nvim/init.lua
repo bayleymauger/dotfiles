@@ -337,7 +337,7 @@ do
 
   ---@type table<string, vim.lsp.Config>
   local servers = {
-    ts_ls = {},
+    vtsls = {},
     stylua = {},
     terraformls = {},
 
@@ -529,4 +529,5 @@ do
   require 'plugins.tmux'
   require 'plugins.oil'
   require 'plugins.opencode'
+  require 'plugins.claude'
 end
