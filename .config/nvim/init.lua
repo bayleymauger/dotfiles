@@ -523,6 +523,7 @@ do
   require 'plugins.indent_line'
   require 'plugins.lint'
   require 'plugins.autopairs'
+  require 'plugins.autotag'
   require 'plugins.ts_comments'
   require 'plugins.trouble'
   require 'plugins.gitsigns' -- adds gitsigns recommended keymaps

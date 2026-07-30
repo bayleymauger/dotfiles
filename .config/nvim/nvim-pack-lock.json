@@ -91,6 +91,10 @@
       "src": "https://github.com/nvim-treesitter/nvim-treesitter",
       "version": "'main'"
     },
+    "nvim-ts-autotag": {
+      "rev": "88c1453db4ba7dd24131086fe51fdf74e587d275",
+      "src": "https://github.com/windwp/nvim-ts-autotag"
+    },
     "nvim-ts-context-commentstring": {
       "rev": "6141a40173c6efa98242dc951ed4b6f892c97027",
       "src": "https://github.com/JoosepAlviste/nvim-ts-context-commentstring"
