@@ -351,7 +351,8 @@ do
           if path ~= vim.fn.stdpath 'config' and (vim.uv.fs_stat(path .. '/.luarc.json') or vim.uv.fs_stat(path .. '/.luarc.jsonc')) then return end
         end
 
-        client.config.settings.Lua = vim.tbl_deep_extend('force', client.config.settings.Lua, {
+        local current_settings = client.config.settings --[[@as lspconfig.settings.lua_ls]]
+        client.config.settings.Lua = vim.tbl_deep_extend('force', current_settings.Lua, {
           runtime = {
             version = 'LuaJIT',
             path = { 'lua/?.lua', 'lua/?/init.lua' },
@@ -384,6 +385,11 @@ do
   }
 
   require('mason').setup {}
+
+  -- Translates between nvim-lspconfig server names and mason.nvim package names (e.g. lua_ls <-> lua-language-server)
+  require('mason-lspconfig').setup {
+    automatic_enable = true, -- Change this to true if you want to automatically enable servers that are installed manually (e.g. via :Mason / :MasonInstall)
+  }
 
   local ensure_installed = vim.tbl_keys(servers or {})
   vim.list_extend(ensure_installed, {})
@@ -473,7 +479,27 @@ end
 do
   vim.pack.add { { src = gh 'nvim-treesitter/nvim-treesitter', version = 'main' } }
 
-  local parsers = { 'bash', 'c', 'diff', 'hcl', 'html', 'lua', 'luadoc', 'markdown', 'markdown_inline', 'query', 'terraform', 'vim', 'vimdoc' }
+  local parsers = {
+    'bash',
+    'diff',
+    'hcl',
+    'html',
+    'lua',
+    'luadoc',
+    'markdown',
+    'markdown_inline',
+    'query',
+    'terraform',
+    'vim',
+    'vimdoc',
+    'javascript',
+    'typescript',
+    'tsx',
+    'css',
+    'json',
+    'gitignore',
+    'go',
+  }
   for _, parser in ipairs(parsers) do
     require('nvim-treesitter').install(parser)
   end
