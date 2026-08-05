@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, tmux, Ghostty, and OpenCode.
+Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, tmux, Ghostty, and Claude Code.
 
 ## Quick Start
 
@@ -27,7 +27,7 @@ The script handles everything on **macOS** and **Linux**:
 ```bash
 git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow .config .tmux.conf .zshrc
+stow .config .tmux.conf .zshrc .mcp.json .claude
 ```
 
 ## What's Configured
@@ -38,7 +38,7 @@ stow .config .tmux.conf .zshrc
 | tmux | `.tmux.conf` | TPM, TokyoNight theme, resurrect, vim-aware pane navigation |
 | Zsh | `.zshrc`, `.config/zsh/*.zsh` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `.config/ghostty/` | JetBrains Mono, TokyoNight theme, cursor shader |
-| OpenCode | `.config/opencode/` | AI assistant config with MCP servers |
+| Claude Code | `.claude/`, `.mcp.json` | Project settings, plugins, and MCP servers |
 
 ### MCP Servers
 

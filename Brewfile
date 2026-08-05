@@ -12,6 +12,9 @@ brew "ghostty"
 # Editor
 brew "neovim", args: ["HEAD"]
 
+# AI
+cask "claude-code"
+
 # Multiplexer
 brew "tmux"
 
