@@ -447,8 +447,12 @@ end
 -- blink.cmp and luasnip setup
 -- ============================================================
 do
-  vim.pack.add { { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' } }
+  vim.pack.add {
+    { src = gh 'L3MON4D3/LuaSnip', version = vim.version.range '2.*' },
+    gh 'rafamadriz/friendly-snippets',
+  }
   require('luasnip').setup {}
+  require('luasnip.loaders.from_vscode').lazy_load()
 
   vim.pack.add { { src = gh 'saghen/blink.cmp', version = vim.version.range '1.*' } }
   require('blink.cmp').setup {
@@ -462,6 +466,11 @@ do
     },
     completion = {
       documentation = { auto_show = false, auto_show_delay_ms = 500 },
+      menu = {
+        draw = {
+          columns = { { 'kind_icon' }, { 'label', 'label_description', gap = 1 }, { 'source_name' } },
+        },
+      },
     },
     sources = {
       default = { 'lsp', 'path', 'snippets' },
