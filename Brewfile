@@ -22,6 +22,11 @@ brew "pyenv"
 brew "pyenv-virtualenv"
 brew "nvm"
 
+# Formatters
+brew "stylua"
+brew "prettierd"
+brew "prettier"
+
 # MCP servers
 tap "dmtrKovalenko/fff"
 brew "fff-mcp"
