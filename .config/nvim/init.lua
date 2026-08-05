@@ -83,6 +83,20 @@ do
   })
 
   vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
+  vim.api.nvim_create_user_command('PackClean', function()
+    local unused = vim
+      .iter(vim.pack.get())
+      :filter(function(x) return not x.active end)
+      :map(function(x) return x.spec.name end)
+      :totable()
+
+    if #unused == 0 then
+      vim.notify('PackClean: no unused plugins to remove', vim.log.levels.INFO)
+      return
+    end
+
+    vim.pack.del(unused)
+  end, {})
 end
 
 -- ============================================================
@@ -120,6 +134,11 @@ do
       if name == 'nvim-treesitter' then
         if not ev.data.active then vim.cmd.packadd 'nvim-treesitter' end
         vim.cmd 'TSUpdate'
+        return
+      end
+
+      if name == 'avante.nvim' then
+        run_build(name, { 'make' }, ev.data.path)
         return
       end
     end,
@@ -564,6 +583,5 @@ do
   require 'plugins.gitsigns' -- adds gitsigns recommended keymaps
   require 'plugins.tmux'
   require 'plugins.oil'
-  require 'plugins.opencode'
-  require 'plugins.claude'
+  require 'plugins.avante'
 end

@@ -24,6 +24,7 @@ clipboard-paste-protection = false
 scrollback-limit = 1000000
 
 font-family = JetBrains Mono
+font-size = 24
 theme = TokyoNight
 bold-color = #aaaaaa
 
