@@ -84,11 +84,7 @@ do
 
   vim.api.nvim_create_user_command('PackUpdate', function() vim.pack.update() end, {})
   vim.api.nvim_create_user_command('PackClean', function()
-    local unused = vim
-      .iter(vim.pack.get())
-      :filter(function(x) return not x.active end)
-      :map(function(x) return x.spec.name end)
-      :totable()
+    local unused = vim.iter(vim.pack.get()):filter(function(x) return not x.active end):map(function(x) return x.spec.name end):totable()
 
     if #unused == 0 then
       vim.notify('PackClean: no unused plugins to remove', vim.log.levels.INFO)
@@ -428,7 +424,7 @@ end
 do
   vim.pack.add { gh 'stevearc/conform.nvim' }
   require('conform').setup {
-    notify_on_error = false,
+    notify_on_error = true,
     format_on_save = function(bufnr)
       -- Specify filetypes to autoformat on save here:
       local enabled_filetypes = {
