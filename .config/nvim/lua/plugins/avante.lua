@@ -11,12 +11,18 @@ vim.pack.add {
 require('render-markdown').setup { file_types = { 'markdown', 'Avante' } }
 
 require('avante').setup {
-  provider = 'claude',
-  providers = {
-    claude = {
-      endpoint = 'https://api.anthropic.com',
-      model = 'claude-sonnet-5',
-      api_key_name = 'AVANTE_ANTHROPIC_API_KEY',
+  provider = 'claude-code',
+  acp_providers = {
+    ['claude-code'] = {
+      -- Spawn via a login shell so nvm resolves whichever node version is
+      -- currently default/active, instead of relying on nvim's PATH, which
+      -- is fixed at the time nvim (or its parent shell) was launched.
+      command = 'zsh',
+      args = { '-lc', 'exec claude-agent-acp "$@"', '--' },
+      env = {
+        NODE_NO_WARNINGS = '1',
+        ANTHROPIC_API_KEY = os.getenv 'ANTHROPIC_API_KEY',
+      },
     },
   },
 }
