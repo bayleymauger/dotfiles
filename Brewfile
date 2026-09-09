@@ -7,7 +7,7 @@ brew "make"
 brew "gcc"
 
 # Terminal
-brew "ghostty"
+cask "ghostty"
 
 # Editor
 brew "neovim", args: ["HEAD"]
@@ -20,6 +20,7 @@ brew "tmux"
 
 # Dev tools
 brew "tree-sitter"
+brew "tree-sitter-cli"
 brew "lazygit"
 brew "pyenv"
 brew "pyenv-virtualenv"
