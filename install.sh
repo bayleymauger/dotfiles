@@ -239,6 +239,10 @@ setup_nvm() {
   fi
 
   export NVM_DIR="$HOME/.nvm"
+  # nvm's own scripts assume `set +u` semantics and reference unset
+  # variables (e.g. $STABLE), which blows up under our `set -u`. Relax
+  # nounset for the duration of sourcing/using nvm.
+  set +u
   # shellcheck source=/dev/null
   [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
@@ -257,6 +261,7 @@ setup_nvm() {
   else
     warn "NVM not loaded — open a new shell and run 'nvm install --lts'"
   fi
+  set -u
 }
 
 # ---------------------------------------------------------------------------
