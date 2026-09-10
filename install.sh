@@ -150,6 +150,30 @@ stow_packages() {
 }
 
 # ---------------------------------------------------------------------------
+# Terminfo (Ghostty)
+# ---------------------------------------------------------------------------
+
+setup_terminfo() {
+  # SSH-ing in from a Ghostty terminal forwards TERM=xterm-ghostty. Machines
+  # that don't have Ghostty installed (e.g. this Linux devbox) lack that
+  # terminfo entry, so anything using ncurses/terminfo fails with "unknown
+  # terminal xterm-ghostty". Install the entry directly so it works
+  # regardless of what client terminal connects.
+  if ! command_exists tic; then
+    warn "tic not found — skipping terminfo install for xterm-ghostty"
+    return
+  fi
+
+  if infocmp xterm-ghostty &>/dev/null; then
+    info "xterm-ghostty terminfo already installed"
+  else
+    info "Installing xterm-ghostty terminfo entry..."
+    tic -x -o "$HOME/.terminfo" "$DOTFILES_DIR/terminfo/xterm-ghostty.terminfo"
+    success "xterm-ghostty terminfo installed"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Git hooks (gitleaks secret scanning)
 # ---------------------------------------------------------------------------
 
@@ -358,6 +382,7 @@ main() {
 
   echo ""
   info "=== Post-setup initialization ==="
+  setup_terminfo
   setup_git_hooks
   setup_tmux
   setup_zsh_plugins
