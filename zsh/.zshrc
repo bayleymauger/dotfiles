@@ -1,3 +1,12 @@
+# --- Homebrew ---
+# Must run before the config loop below: nvm.zsh and pyenv.zsh both rely on
+# Homebrew-installed tools (and nvm.zsh on $HOMEBREW_PREFIX) being on PATH.
+if [ -x /opt/homebrew/bin/brew ]; then
+  eval "$(/opt/homebrew/bin/brew shellenv)"
+elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
+  eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+fi
+
 # --- Zsh Config Files ---
 for config in ~/.config/zsh/*.zsh; do
   [ -f "$config" ] && source "$config"

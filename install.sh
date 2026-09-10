@@ -327,20 +327,23 @@ setup_pyenv() {
 }
 
 # ---------------------------------------------------------------------------
-# macOS: Set default shell
+# Set default shell to zsh
 # ---------------------------------------------------------------------------
 
 setup_default_shell() {
+  local ZSH_PATH
+  ZSH_PATH="$(which zsh)"
+
   if [ "$PLATFORM" = "macos" ]; then
     local CURRENT_SHELL
     CURRENT_SHELL=$(dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')
-    if [ "$CURRENT_SHELL" != "$(which zsh)" ]; then
+    if [ "$CURRENT_SHELL" != "$ZSH_PATH" ]; then
       info "Setting zsh as default shell..."
-      if ! grep -q "$(which zsh)" /etc/shells; then
-        info "Adding $(which zsh) to /etc/shells (may ask for sudo)..."
-        which zsh | sudo tee -a /etc/shells
+      if ! grep -q "$ZSH_PATH" /etc/shells; then
+        info "Adding $ZSH_PATH to /etc/shells (may ask for sudo)..."
+        echo "$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null
       fi
-      chsh -s "$(which zsh)"
+      chsh -s "$ZSH_PATH"
       success "Default shell set to zsh"
     else
       info "zsh is already the default shell"
@@ -348,9 +351,22 @@ setup_default_shell() {
   else
     local CURRENT_SHELL
     CURRENT_SHELL=$(getent passwd "$USER" | cut -d: -f7)
-    if [ "$CURRENT_SHELL" != "$(which zsh)" ]; then
-      info "Current shell is $CURRENT_SHELL"
-      info "To set zsh as default, run: chsh -s $(which zsh)"
+    if [ "$CURRENT_SHELL" != "$ZSH_PATH" ]; then
+      info "Setting zsh as default shell..."
+      if ! grep -q "$ZSH_PATH" /etc/shells; then
+        info "Adding $ZSH_PATH to /etc/shells (may ask for sudo)..."
+        echo "$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null
+      fi
+      # usermod edits /etc/passwd directly and doesn't need a PAM
+      # conversation, which makes it more reliable than chsh in minimal
+      # container/devbox environments.
+      if sudo usermod -s "$ZSH_PATH" "$USER"; then
+        success "Default shell set to zsh (open a new session for it to take effect)"
+      else
+        warn "Could not set zsh as default shell — run: chsh -s $ZSH_PATH"
+      fi
+    else
+      info "zsh is already the default shell"
     fi
   fi
 }
