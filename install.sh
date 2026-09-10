@@ -238,30 +238,31 @@ setup_nvm() {
     curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
   fi
 
-  export NVM_DIR="$HOME/.nvm"
-  # nvm's own scripts assume `set +u` semantics and reference unset
-  # variables (e.g. $STABLE), which blows up under our `set -u`. Relax
-  # nounset for the duration of sourcing/using nvm.
-  set +u
-  # shellcheck source=/dev/null
-  [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
+  # nvm's own script isn't -e/-u safe (it references unset variables and
+  # can return/exit in ways that would otherwise kill this whole script
+  # since sourcing runs directly in our process). Run it in a subshell so
+  # any of that is contained and only ever downgrades to a warning here.
+  (
+    set +u
+    export NVM_DIR="$HOME/.nvm"
+    # shellcheck source=/dev/null
+    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
 
-  if command_exists nvm; then
-    local NODE_VERSION
-    NODE_VERSION=$(nvm ls | grep -oE 'v[0-9]+' | grep -oE '[0-9]+' | sort -rn | head -1)
-    if [ -z "$NODE_VERSION" ]; then
-      info "Installing Node.js LTS..."
-      nvm install --lts
-      nvm use --lts
-      nvm alias default "lts/*"
+    if command_exists nvm; then
+      NODE_VERSION=$(nvm ls | grep -oE 'v[0-9]+' | grep -oE '[0-9]+' | sort -rn | head -1)
+      if [ -z "$NODE_VERSION" ]; then
+        info "Installing Node.js LTS..."
+        nvm install --lts
+        nvm use --lts
+        nvm alias default "lts/*"
+      else
+        info "Node.js v$NODE_VERSION already installed"
+      fi
+      success "NVM + Node.js ready"
     else
-      info "Node.js v$NODE_VERSION already installed"
+      warn "NVM not loaded — open a new shell and run 'nvm install --lts'"
     fi
-    success "NVM + Node.js ready"
-  else
-    warn "NVM not loaded — open a new shell and run 'nvm install --lts'"
-  fi
-  set -u
+  ) || warn "NVM/Node.js setup hit an issue — open a new shell and run 'nvm install --lts' manually"
 }
 
 # ---------------------------------------------------------------------------
