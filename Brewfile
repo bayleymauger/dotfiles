@@ -5,6 +5,7 @@ brew "curl"
 brew "wget"
 brew "make"
 brew "gcc"
+brew "zsh"
 
 # Terminal
 cask "ghostty"
