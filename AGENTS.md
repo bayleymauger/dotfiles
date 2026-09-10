@@ -9,7 +9,7 @@ This is a personal dotfiles repository using **GNU Stow** to symlink configurati
 ```
 .
 ├── Brewfile                    # Homebrew dependencies (macOS)
-├── setup.sh                    # One-command setup script
+├── install.sh                    # One-command setup script
 ├── .mcp.json                   # MCP servers available to Claude Code in this repo
 ├── .claude/                    # Claude Code project settings
 │   ├── CLAUDE.md
@@ -48,7 +48,7 @@ This is a personal dotfiles repository using **GNU Stow** to symlink configurati
 ```bash
 git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./setup.sh
+./install.sh
 ```
 The script installs dependencies (Homebrew/apt/dnf/pacman), stows configs, and initializes TPM, NVM, pyenv, and Neovim plugins.
 
@@ -168,7 +168,7 @@ Uses JetBrains Mono font at 16pt, tokyonight theme, block cursor with blink, zsh
 - New splits/windows inherit current pane's working directory
 
 ## Zsh Configuration
-- No plugin framework — `.zshrc` manually sources `.config/zsh/*.zsh` and clones of `zsh-autosuggestions`/`zsh-syntax-highlighting` (installed by `setup.sh`)
+- No plugin framework — `.zshrc` manually sources `.config/zsh/*.zsh` and clones of `zsh-autosuggestions`/`zsh-syntax-highlighting` (installed by `install.sh`)
 - Prompt: Starship
 - Tool init: zoxide, atuin (with `^[[A` bound to atuin's full-screen up-search), fzf
 

@@ -7,7 +7,7 @@ Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, tmux, Gh
 ```bash
 git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-./setup.sh
+./install.sh
 ```
 
 The script handles everything on **macOS** and **Linux**:
@@ -31,7 +31,7 @@ cd ~/dotfiles
 stow -t ~ ghostty nvim zsh tmux
 ```
 
-To remove everything Stow has linked, run `./unstow.sh` (or `stow -D -t ~ ghostty nvim zsh tmux`).
+To remove everything Stow has linked, run `./uninstall.sh` (or `stow -D -t ~ ghostty nvim zsh tmux`).
 
 Each package is a top-level directory whose contents mirror the paths they
 occupy under `$HOME`, e.g. `nvim/.config/nvim/init.lua` -> `~/.config/nvim/init.lua`.
@@ -72,7 +72,7 @@ machine-wide dotfiles.
 ## Git Hooks
 
 `git-hooks/pre-push` runs [gitleaks](https://github.com/gitleaks/gitleaks) to
-scan for secrets before every push. `setup.sh` wires it up automatically via
+scan for secrets before every push. `install.sh` wires it up automatically via
 `git config core.hooksPath ./git-hooks`. If gitleaks isn't installed, the hook
 warns and lets the push through; bypass it in an emergency with
 `git push --no-verify`.
@@ -81,7 +81,7 @@ warns and lets the push through; bypass it in an emergency with
 
 Create a new top-level directory in `dotfiles/` whose contents mirror where
 they should land under `$HOME` (e.g. `foo/.config/foo/config.toml`), add it to
-`STOW_PACKAGES` in both `setup.sh` and `unstow.sh`, then stow it:
+`STOW_PACKAGES` in both `install.sh` and `uninstall.sh`, then stow it:
 
 ```bash
 cd ~/dotfiles
@@ -100,4 +100,4 @@ stow -D -t ~ foo
 ```
 
 This removes the symlink but leaves the original file in place. To remove
-everything at once, run `./unstow.sh`.
+everything at once, run `./uninstall.sh`.
