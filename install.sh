@@ -9,6 +9,12 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
+# The Brewfile taps a personal third-party tap (dmtrKovalenko/fff) for
+# fff-mcp. Recent Homebrew refuses to install from an untrusted tap in
+# non-interactive contexts (like devbox provisioning); we trust it explicitly
+# since it's a deliberate, known dependency.
+export HOMEBREW_NO_REQUIRE_TAP_TRUST=1
+
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------

@@ -10,7 +10,7 @@ brew "gcc"
 cask "ghostty"
 
 # Editor
-brew "neovim", args: ["HEAD"]
+brew "neovim"
 
 # AI
 cask "claude-code"
