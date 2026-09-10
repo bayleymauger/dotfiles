@@ -25,6 +25,7 @@ brew "lazygit"
 brew "pyenv"
 brew "pyenv-virtualenv"
 brew "nvm"
+brew "gitleaks"
 
 # Formatters
 brew "stylua"

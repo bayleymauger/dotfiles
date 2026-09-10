@@ -117,19 +117,28 @@ install_nerd_font() {
 # Stow
 # ---------------------------------------------------------------------------
 
+# Packages we manage with Stow. Each is a top-level directory in this repo
+# whose contents mirror the paths they should occupy under $HOME, e.g.
+# nvim/.config/nvim/init.lua -> ~/.config/nvim/init.lua
+STOW_PACKAGES=(ghostty nvim zsh tmux)
+
 stow_packages() {
   info "Symlinking dotfiles with Stow..."
 
   cd "$DOTFILES_DIR"
-
-  # Stow .config contents as a single unit
-  stow .config
-
-  # Stow individual root-level dotfiles
-  stow .tmux.conf
-  stow .zshrc
+  stow -t "$HOME" "${STOW_PACKAGES[@]}"
 
   success "All dotfiles stowed"
+}
+
+# ---------------------------------------------------------------------------
+# Git hooks (gitleaks secret scanning)
+# ---------------------------------------------------------------------------
+
+setup_git_hooks() {
+  info "Configuring git hooks..."
+  git -C "$DOTFILES_DIR" config core.hooksPath ./git-hooks
+  success "git hooks configured (gitleaks scans on push)"
 }
 
 # ---------------------------------------------------------------------------
@@ -330,6 +339,7 @@ main() {
 
   echo ""
   info "=== Post-setup initialization ==="
+  setup_git_hooks
   setup_tmux
   setup_zsh_plugins
   setup_neovim
