@@ -87,7 +87,7 @@ install_packages_linux() {
   fi
 
   info "Installing packages from Brewfile..."
-  brew bundle --file="$DOTFILES_DIR/Brewfile" --no-lock
+  brew bundle --file="$DOTFILES_DIR/Brewfile"
   success "All packages installed via Homebrew"
 }
 
