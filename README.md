@@ -20,7 +20,7 @@ The script handles everything on **macOS** and **Linux**:
 6. Set up Tmux Plugin Manager (TPM) and plugins
 7. Clone zsh-autosuggestions and zsh-syntax-highlighting
 8. Install Neovim plugins
-9. Install NVM + Node.js and pyenv + Python
+9. Install NVM + Node.js, and pyenv (Python itself isn't auto-installed — run `pyenv install <version>` yourself)
 10. Set Zsh as the default shell
 
 ## Manual Installation

@@ -282,17 +282,12 @@ setup_pyenv() {
   eval "$(pyenv init -)" 2>/dev/null || true
 
   if command_exists pyenv; then
-    local PYTHON_VERSION
-    PYTHON_VERSION=$(pyenv version-name 2>/dev/null || echo "")
-    if [ -z "$PYTHON_VERSION" ] || [ "$PYTHON_VERSION" = "system" ]; then
-      info "Installing latest stable Python..."
-      pyenv install -l | grep -E '^\s*[0-9]+\.[0-9]+\.[0-9]+$' | tail -1 | xargs pyenv install
-      local LATEST
-      LATEST=$(pyenv versions --bare | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | sort -V | tail -1)
-      pyenv global "$LATEST"
-    else
-      info "Python $PYTHON_VERSION already set"
-    fi
+    # We deliberately don't auto-build a Python version here: building the
+    # latest CPython from source can fail against an older system glibc
+    # (e.g. Ubuntu 22.04's glibc 2.35 vs. Python 3.14 needing glibc 2.38).
+    # Run `pyenv install <version> && pyenv global <version>` yourself when
+    # you need a specific Python.
+    info "pyenv ready — run 'pyenv install <version>' to install a Python"
 
     # Enable pyenv-virtualenv if available
     if [ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]; then
@@ -301,7 +296,7 @@ setup_pyenv() {
       eval "$(pyenv virtualenv-init -)" 2>/dev/null || true
     fi
 
-    success "pyenv + Python ready"
+    success "pyenv ready"
   else
     warn "pyenv not loaded — open a new shell to complete setup"
   fi
