@@ -126,7 +126,19 @@ stow_packages() {
   info "Symlinking dotfiles with Stow..."
 
   cd "$DOTFILES_DIR"
-  stow -t "$HOME" "${STOW_PACKAGES[@]}"
+
+  # -R (restow) makes this safe to run repeatedly: it relinks packages that
+  # are already stowed instead of erroring on the existing symlinks.
+  # Each package is stowed individually so a conflict (e.g. a real,
+  # non-symlinked file already at the target path) only skips that one
+  # package instead of aborting the whole script.
+  for pkg in "${STOW_PACKAGES[@]}"; do
+    if stow -R -t "$HOME" "$pkg"; then
+      success "Stowed $pkg"
+    else
+      warn "Failed to stow $pkg — a real file may already exist at the target path (move it aside and re-run to link it)"
+    fi
+  done
 
   success "All dotfiles stowed"
 }
