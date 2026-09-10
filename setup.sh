@@ -238,7 +238,7 @@ setup_nvm() {
 
   if command_exists nvm; then
     local NODE_VERSION
-    NODE_VERSION=$(nvm ls | grep -oP 'v\K[0-9]+' | sort -rn | head -1)
+    NODE_VERSION=$(nvm ls | grep -oE 'v[0-9]+' | grep -oE '[0-9]+' | sort -rn | head -1)
     if [ -z "$NODE_VERSION" ]; then
       info "Installing Node.js LTS..."
       nvm install --lts
