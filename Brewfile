@@ -26,6 +26,7 @@ brew "pyenv"
 brew "pyenv-virtualenv"
 brew "nvm"
 brew "gitleaks"
+brew "ripgrep"
 
 # Formatters
 brew "stylua"
