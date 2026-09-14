@@ -34,6 +34,9 @@ brew "stylua"
 brew "prettierd"
 brew "prettier"
 
+# Linters
+brew "markdownlint-cli"
+
 # MCP servers
 tap "dmtrKovalenko/fff"
 brew "fff-mcp"
