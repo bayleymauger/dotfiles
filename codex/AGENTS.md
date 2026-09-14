@@ -11,6 +11,8 @@ repository's own `AGENTS.md` provides more-specific guidance.
   relevant available checks.
 - Prefer small, understandable changes over broad refactors.
 - Do not commit, push, or alter external services unless explicitly asked.
+- For file search or grep in a git-indexed directory, use the `fff` MCP tools
+  when available.
 
 ## Safety
 

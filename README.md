@@ -35,7 +35,8 @@ To remove everything Stow has linked, run `./uninstall.sh` (or `stow -D -t ~ cod
 
 Each package is a top-level directory whose contents mirror the paths they
 occupy under `$HOME`, e.g. `nvim/.config/nvim/init.lua` -> `~/.config/nvim/init.lua`.
-The `codex/AGENTS.md` package is therefore linked as `~/AGENTS.md`.
+The `codex/AGENTS.md` package is therefore linked as `~/AGENTS.md`; its
+`.codex/config.toml` is linked as `~/.codex/config.toml`.
 
 ## What's Configured
 
@@ -45,16 +46,16 @@ The `codex/AGENTS.md` package is therefore linked as `~/AGENTS.md`.
 | tmux | `tmux/.tmux.conf` | TPM, TokyoNight theme, resurrect, vim-aware pane navigation |
 | Zsh | `zsh/.zshrc`, `zsh/.config/zsh/*.zsh` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `ghostty/.config/ghostty/` | JetBrains Mono, TokyoNight theme, cursor shader |
-| Codex | `codex/AGENTS.md` | Global instructions, stowed as `~/AGENTS.md` |
+| Codex | `codex/AGENTS.md`, `codex/.codex/config.toml` | Global instructions and MCP configuration |
 
 ### MCP Servers
 
 | Server | Type | Notes |
 |--------|------|-------|
-| `github` | Remote | GitHub API access via Copilot MCP endpoint |
-| `context7` | Remote | Documentation lookup for libraries |
-| `fff` | Local | Fast file finder (`fff-mcp` via Homebrew) |
-| `playwright` | Local | Browser automation (`npx @playwright/mcp`) |
+| `context7` | Local | Documentation lookup for libraries via `npx @upstash/context7-mcp` |
+| `fff` | Local | Fast file search via the Homebrew-installed `fff-mcp` binary |
+| `github` | Remote | GitHub's hosted MCP server, authenticated through OAuth |
+| `playwright` | Local | Browser automation via `npx @playwright/mcp@latest` |
 
 ### Shell Stack
 

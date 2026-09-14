@@ -1,0 +1,24 @@
+# Stowed to ~/.codex/config.toml.
+#
+# Add additional MCP servers below using the same [mcp_servers.<name>] pattern.
+
+[mcp_servers.context7]
+command = "npx"
+args = ["-y", "@upstash/context7-mcp"]
+startup_timeout_ms = 20_000
+
+# fff-mcp is installed through Homebrew (dmtrKovalenko/fff/fff-mcp). Use the
+# absolute path because desktop Codex sessions may not inherit the shell PATH.
+[mcp_servers.fff]
+command = "/opt/homebrew/bin/fff-mcp"
+
+# GitHub's hosted MCP server. Authenticate interactively with
+# `codex mcp login github` after stowing this config.
+[mcp_servers.github]
+url = "https://api.githubcopilot.com/mcp/"
+auth = "oauth"
+default_tools_approval_mode = "writes"
+
+[mcp_servers.playwright]
+command = "npx"
+args = ["@playwright/mcp@latest"]
