@@ -133,10 +133,6 @@ do
         return
       end
 
-      if name == 'avante.nvim' then
-        run_build(name, { 'make' }, ev.data.path)
-        return
-      end
     end,
   })
 end
@@ -579,5 +575,4 @@ do
   require 'plugins.gitsigns' -- adds gitsigns recommended keymaps
   require 'plugins.tmux'
   require 'plugins.oil'
-  require 'plugins.avante'
 end

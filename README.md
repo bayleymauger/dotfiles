@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, tmux, Ghostty, and Claude Code.
+Personal dotfiles managed with GNU Stow. Configuration for Codex, Neovim, Zsh, tmux, and Ghostty.
 
 ## Quick Start
 
@@ -28,16 +28,14 @@ The script handles everything on **macOS** and **Linux**:
 ```bash
 git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
-stow -t ~ ghostty nvim zsh tmux
+stow -t ~ codex ghostty nvim zsh tmux
 ```
 
-To remove everything Stow has linked, run `./uninstall.sh` (or `stow -D -t ~ ghostty nvim zsh tmux`).
+To remove everything Stow has linked, run `./uninstall.sh` (or `stow -D -t ~ codex ghostty nvim zsh tmux`).
 
 Each package is a top-level directory whose contents mirror the paths they
 occupy under `$HOME`, e.g. `nvim/.config/nvim/init.lua` -> `~/.config/nvim/init.lua`.
-`.claude/` and `.mcp.json` are deliberately **not** stowed — they stay as
-regular files in the repo since they're project-local Claude Code config, not
-machine-wide dotfiles.
+The `codex/AGENTS.md` package is therefore linked as `~/AGENTS.md`.
 
 ## What's Configured
 
@@ -47,7 +45,7 @@ machine-wide dotfiles.
 | tmux | `tmux/.tmux.conf` | TPM, TokyoNight theme, resurrect, vim-aware pane navigation |
 | Zsh | `zsh/.zshrc`, `zsh/.config/zsh/*.zsh` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `ghostty/.config/ghostty/` | JetBrains Mono, TokyoNight theme, cursor shader |
-| Claude Code | `.claude/`, `.mcp.json` | Project settings, plugins, and MCP servers (not stowed) |
+| Codex | `codex/AGENTS.md` | Global instructions, stowed as `~/AGENTS.md` |
 
 ### MCP Servers
 
@@ -89,8 +87,8 @@ stow -t ~ foo
 ```
 
 Be selective about what gets added here — only stow things you want symlinked
-system-wide. Anything project-local or sensitive (like `.claude/` or
-`.mcp.json`) should stay unstowed.
+system-wide. Keep project-local or sensitive configuration out of Stow
+packages.
 
 ## Removing Dotfiles
 

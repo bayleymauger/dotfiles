@@ -14,7 +14,7 @@ cask "ghostty"
 brew "neovim"
 
 # AI
-cask "claude-code"
+cask "codex"
 
 # Multiplexer
 brew "tmux"

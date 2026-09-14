@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a personal dotfiles repository using **GNU Stow** to symlink configuration files into `$HOME`. It is not a software project — there is no build, test, or deploy pipeline. The repository manages configuration for: Neovim (Lua-based, nvim 0.12+), Zsh, tmux, Ghostty terminal, and Claude Code.
+This is a personal dotfiles repository using **GNU Stow** to symlink configuration files into `$HOME`. It is not a software project — there is no build, test, or deploy pipeline. The repository manages configuration for: Codex, Neovim (Lua-based, nvim 0.12+), Zsh, tmux, and Ghostty terminal.
 
 ## Repository Structure
 
@@ -10,11 +10,8 @@ This is a personal dotfiles repository using **GNU Stow** to symlink configurati
 .
 ├── Brewfile                    # Homebrew dependencies (macOS)
 ├── install.sh                    # One-command setup script
-├── .mcp.json                   # MCP servers available to Claude Code in this repo
-├── .claude/                    # Claude Code project settings
-│   ├── CLAUDE.md
-│   ├── settings.json
-│   └── settings.local.json
+├── codex/                       # Stow package for home-directory Codex guidance
+│   └── AGENTS.md                # Linked to ~/AGENTS.md
 ├── .config/
 │   ├── ghostty/                # Ghostty terminal config + cursor shader
 │   │   ├── config
@@ -27,7 +24,6 @@ This is a personal dotfiles repository using **GNU Stow** to symlink configurati
 │   │       └── plugins/        # Supplementary plugin configs
 │   │           ├── autopairs.lua
 │   │           ├── autotag.lua
-│   │           ├── avante.lua
 │   │           ├── debug.lua
 │   │           ├── gitsigns.lua
 │   │           ├── indent_line.lua
@@ -85,7 +81,7 @@ Single-file Lua config (`init.lua`) with supplementary plugin files in `lua/plug
 ### Config Structure (init.lua sections)
 1. **Options** — leader, vim.o settings, basic autocmds
 2. **Keymaps** — window navigation, diagnostics, terminal mode, `PackUpdate`/`PackClean` commands
-3. **Plugin Manager** — `vim.pack` build hooks (telescope-fzf-native, LuaSnip, treesitter, avante.nvim)
+3. **Plugin Manager** — `vim.pack` build hooks (telescope-fzf-native, LuaSnip, treesitter)
 4. **UI/Core UX** — guess-indent, gitsigns, which-key, tokyonight, todo-comments, mini modules
 5. **Search & Navigation** — Telescope + extensions, LSP picker keymaps
 6. **LSP** — fidget, mason, mason-lspconfig, mason-tool-installer, server configs (vtsls, stylua, terraformls, lua_ls)
@@ -97,7 +93,6 @@ Single-file Lua config (`init.lua`) with supplementary plugin files in `lua/plug
 ### Supplementary Plugins (lua/plugins/)
 - `autopairs.lua` — nvim-autopairs
 - `autotag.lua` — nvim-ts-autotag (auto-close/rename HTML/JSX tags)
-- `avante.lua` — avante.nvim, AI coding assistant panel (see below)
 - `debug.lua` — nvim-dap + dap-ui + mason-nvim-dap (Go/delve)
 - `gitsigns.lua` — gitsigns recommended keymaps (hunk nav, stage, blame, diff)
 - `indent_line.lua` — indent-blankline.nvim
@@ -128,9 +123,6 @@ Format-on-save is disabled by default (empty `enabled_filetypes` table). Format 
 
 ### Debugging
 Uses nvim-dap with Go (delve) support. Keymaps: `<F5>` continue, `<F1>` step in, `<F2>` step over, `<F3>` step out, `<leader>b` toggle breakpoint, `<leader>B` conditional breakpoint, `<F7>` toggle debug UI.
-
-### AI Assistant (avante.nvim)
-`lua/plugins/avante.lua` — chat/edit panel backed by the Anthropic API (`provider = 'claude'`, model `claude-sonnet-5`). Reads the API key from the `AVANTE_ANTHROPIC_API_KEY` env var (not `ANTHROPIC_API_KEY`). Deps: plenary.nvim, nui.nvim, render-markdown.nvim (renders the chat buffer). Build step compiles a Rust component via `make` on install/update (requires a Rust toolchain). Keymaps: `<leader>aA` ask, `<leader>aE` edit, `<leader>aT` toggle.
 
 ### Trouble / Diagnostics UX
 `<leader>xx` toggle diagnostics list, `<leader>xX` buffer-only diagnostics, `<leader>cs` symbols, `<leader>cl` LSP results (references/definitions/etc.), `<leader>xL`/`<leader>xQ` location/quickfix list.
@@ -172,10 +164,9 @@ Uses JetBrains Mono font at 16pt, tokyonight theme, block cursor with blink, zsh
 - Prompt: Starship
 - Tool init: zoxide, atuin (with `^[[A` bound to atuin's full-screen up-search), fzf
 
-## Claude Code Configuration
-- `.mcp.json` declares MCP servers available in this repo: `github` (remote, via Copilot MCP endpoint), `context7` (remote docs lookup), `fff` (local, fast file finder), `playwright` (local browser automation)
-- `.claude/settings.json` enables those MCP servers plus the `gopls-lsp` and `typescript-lsp` plugins, and sets `effortLevel: low`
-- `.claude/CLAUDE.md` holds project-specific instructions for Claude Code sessions in this repo
+## Codex Configuration
+- `codex/AGENTS.md` is a Stow package that links to `~/AGENTS.md` and holds broad, home-directory guidance.
+- This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository and takes precedence when Codex works here.
 
 ## Gotchas
 
@@ -184,12 +175,10 @@ Uses JetBrains Mono font at 16pt, tokyonight theme, block cursor with blink, zsh
 3. **Oil.nvim is not lazy loaded** — loaded immediately via `require 'plugins.oil'` in Section 10
 4. **Format-on-save is disabled** — conform has an empty `enabled_filetypes` table; format manually with `<leader>f` or enable specific filetypes
 5. **Telescope shows hidden files** — `find_files` and ripgrep both have `--hidden` flag enabled
-6. **Stow uses directory structure** — `.config/` is stowed as a single unit; root-level files (`.tmux.conf`, `.zshrc`, `.mcp.json`) are stowed individually
+6. **Stow uses directory structure** — each package mirrors its target under `$HOME`; `codex/AGENTS.md`, for example, is stowed as `~/AGENTS.md`
 7. **Blink.cmp uses Lua fuzzy matcher** — rust implementation is available but opted for Lua (`fuzzy.implementation = "lua"`)
 8. **No swap files** — `vim.o.swapfile = false` is set globally
 9. **nvim-treesitter uses `main` branch** — the rewrite for nvim 0.12+. Requires `tree-sitter-cli` to compile parsers from source
 10. **nvim-treesitter skips bundled parsers** — nvim 0.12 ships its own parsers for `lua`, `c`, `vim`, `vimdoc`, `markdown`, `markdown_inline`, `query`. The config only installs additional parsers (bash, diff, html, etc.)
 11. **Built-in commenting** — nvim 0.10+ has `gc`/`gcc`, with `commentstring` made treesitter-aware by ts-comments.nvim (no Comment.nvim plugin needed)
 12. **Diagnostics auto-open float** — `jump = { on_jump = ... }` in diagnostic config opens a float window when navigating diagnostics
-13. **avante.nvim needs a Rust toolchain** — its `PackChanged` build hook runs `make`, which compiles a Rust binary; without `cargo` installed, avante will fail to build
-14. **avante.nvim reads a non-standard env var** — `AVANTE_ANTHROPIC_API_KEY`, not `ANTHROPIC_API_KEY`, so it doesn't silently pick up a key meant for another tool

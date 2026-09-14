@@ -126,7 +126,7 @@ install_nerd_font() {
 # Packages we manage with Stow. Each is a top-level directory in this repo
 # whose contents mirror the paths they should occupy under $HOME, e.g.
 # nvim/.config/nvim/init.lua -> ~/.config/nvim/init.lua
-STOW_PACKAGES=(ghostty nvim zsh tmux)
+STOW_PACKAGES=(codex ghostty nvim zsh tmux)
 
 stow_packages() {
   info "Symlinking dotfiles with Stow..."

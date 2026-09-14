@@ -45,3 +45,4 @@ bindkey '^[[A' atuin-up-search
 
 # --- Environment Variables ---
 export HOMEBREW_EDITOR=nvim
+

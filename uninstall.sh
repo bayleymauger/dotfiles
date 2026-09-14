@@ -12,7 +12,7 @@ success() { echo -e "  \033[32m\033[1m 󰌶 $*\033[0m"; }
 warn() { echo -e "  \033[38;5;137m 󰀪 $*\033[0m"; }
 
 # Keep in sync with STOW_PACKAGES in install.sh
-STOW_PACKAGES=(ghostty nvim zsh tmux)
+STOW_PACKAGES=(codex ghostty nvim zsh tmux)
 
 info "Unstowing dotfiles..."
 cd "$DOTFILES_DIR"
