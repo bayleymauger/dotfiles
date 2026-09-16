@@ -15,6 +15,7 @@ brew "neovim"
 
 # AI
 cask "codex"
+brew "pi-coding-agent"
 
 # Multiplexer
 brew "tmux"
