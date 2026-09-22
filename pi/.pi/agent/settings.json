@@ -1,0 +1,11 @@
+{
+  "theme": "dracula",
+  "defaultProvider": "openai-codex",
+  "defaultModel": "gpt-6-sol",
+  "packages": [
+    "npm:pi-mcp-adapter",
+    "npm:pi-subagents",
+    "npm:pi-web-access"
+  ],
+  "lastChangelogVersion": "0.86.1"
+}
