@@ -9,24 +9,56 @@
     "modelScope": {
       "enforce": true,
       "strict": true,
-      "allow": ["openai-codex/*"]
+      "allow": [
+        "openai-codex/*"
+      ]
     },
     "agentOverrides": {
-      "scout": { "model": "openai-codex/gpt-6-luna", "thinking": "low" },
-      "researcher": { "model": "openai-codex/gpt-6-luna", "thinking": "low" },
-      "worker": { "model": "openai-codex/gpt-6-luna", "thinking": "max" },
-      "delegate": { "model": "openai-codex/gpt-6-luna", "thinking": "max" },
-      "reviewer": { "model": "openai-codex/gpt-6-sol", "thinking": "high" },
-      "evidence-auditor": { "model": "openai-codex/gpt-6-sol", "thinking": "high" },
-      "oracle": { "model": "openai-codex/gpt-6-astra", "thinking": "high" },
-      "advisor": { "model": "openai-codex/gpt-6-astra", "thinking": "high" },
-      "intent": { "model": "openai-codex/gpt-6-sol", "thinking": "medium" }
+      "scout": {
+        "model": "openai-codex/gpt-6-luna",
+        "thinking": "low"
+      },
+      "researcher": {
+        "model": "openai-codex/gpt-6-luna",
+        "thinking": "low"
+      },
+      "worker": {
+        "model": "openai-codex/gpt-6-luna",
+        "thinking": "max"
+      },
+      "delegate": {
+        "model": "openai-codex/gpt-6-luna",
+        "thinking": "max"
+      },
+      "reviewer": {
+        "model": "openai-codex/gpt-6-sol",
+        "thinking": "high"
+      },
+      "evidence-auditor": {
+        "model": "openai-codex/gpt-6-sol",
+        "thinking": "high"
+      },
+      "oracle": {
+        "model": "openai-codex/gpt-6-astra",
+        "thinking": "high"
+      },
+      "advisor": {
+        "model": "openai-codex/gpt-6-astra",
+        "thinking": "high"
+      },
+      "intent": {
+        "model": "openai-codex/gpt-6-sol",
+        "thinking": "medium"
+      }
     }
   },
   "packages": [
     "npm:pi-mcp-adapter",
     "npm:pi-subagents",
-    "npm:pi-web-access"
+    "npm:pi-web-access",
+    "npm:@juicesharp/rpiv-ask-user-question",
+    "npm:pi-blackhole",
+    "npm:@dietrichgebert/ponytail"
   ],
   "lastChangelogVersion": "0.86.1"
 }
