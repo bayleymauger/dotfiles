@@ -1,6 +1,6 @@
 ---
 name: requesting-code-review
-description: Use when completing tasks, implementing major features, fixing complex bugs, or before merging to get an independent review of the changes - works with or without a plan or spec
+description: Use when completing tasks, implementing major features, fixing complex bugs, or before merging to get an independent review of the changes - works with or without a plan or spec. For reviewing someone else's GitHub PR, use reviewing-github-prs instead
 ---
 
 # Requesting Code Review
