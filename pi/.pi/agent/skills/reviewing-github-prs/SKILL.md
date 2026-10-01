@@ -98,10 +98,23 @@ the user wants to give feedback without a verdict.
 Rewrite the findings for a human author. Keep the substance and drop the
 reviewer's internal wording:
 
-- Summary body: one or two sentences on what the PR does and the verdict's reason. No praise padding, no tripwire numbers.
+- Summary body: one or two sentences on what the PR does and the verdict's reason. Specific recognition of good code is welcome; skip generic praise padding and tripwire numbers.
 - Blocking items become inline comments that start with `**Blocking:**`, then say what breaks, when, and the suggested fix.
 - Non-blocking items become inline comments that start with `nit:` or `suggestion:` so the author knows they can ignore them.
 - "Declined to judge" stays out of the review. Show it to the user so they can rule on it.
+
+### Tone and phrasing
+
+- Discuss the code, not the person. Assume good intent; clarify uncertain
+  reasoning before calling it a mistake.
+- Be respectful and collaborative. Avoid blame, sarcasm, commands like
+  “change this”, and unexplained “always” or “never”.
+- Explain why and suggest a concrete next step: “We could use X because Y”,
+  not “Find a better solution”. Ask “What motivated this approach?”, not
+  “Why are you doing this?”
+- State confirmed bugs directly; don't soften blockers into vague questions.
+- Raise repeated issues once. Leave no comments when there's nothing useful
+  to add.
 
 Show the user the draft (event, body, each `path:line` comment) plus the
 declined-to-judge list, and ask whether to post, edit, or drop it.
