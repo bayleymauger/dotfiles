@@ -1,0 +1,20 @@
+# Model per provider and tier, picked by the parent session's $PI_PROVIDER.
+# Profiles set `tier:`; a provider/tier with no row falls back to the parent's
+# model. Add a provider by adding four rows. When new model versions ship, run
+# `pi-subagent tiers` to see them and `pi-subagent tiers --update` to apply.
+#
+# fast      cheapest capable model, low thinking: recon, lookups, mechanical edits
+# standard  mid-tier, medium thinking: most well-scoped delegations
+# deep      top reasoning, high thinking: hard tasks with explicit completion criteria
+#           (loops on vague goals, so keep it off open-ended work)
+# intent    reads human intent and makes judgment calls: scoping, UX, product tradeoffs
+#
+# provider      tier      model[:thinking]
+anthropic       fast      anthropic/claude-sonnet-5-5:low
+anthropic       standard  anthropic/claude-sonnet-5-5:medium
+anthropic       deep      anthropic/claude-opus-5-5:high
+anthropic       intent    anthropic/claude-fable-5-1:medium
+openai-codex    fast      openai-codex/gpt-6-luna:low
+openai-codex    standard  openai-codex/gpt-6-luna:max
+openai-codex    deep      openai-codex/gpt-6.1-sol:high
+openai-codex    intent    openai-codex/gpt-6.1-sol:medium

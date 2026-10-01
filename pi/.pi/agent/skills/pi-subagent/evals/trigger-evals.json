@@ -1,0 +1,20 @@
+[
+  {"query": "before i merge this auth refactor can you get a second opinion on the approach? branch is feat/session-tokens in ~/code/api, i'm worried the refresh flow is overcomplicated", "should_trigger": true},
+  {"query": "Spin up a couple of agents in parallel: one to audit every SQL query in services/billing for injection risk, one to list which billing endpoints have no integration tests. Combine their findings.", "should_trigger": true},
+  {"query": "open another pi in a tmux window and have it work on upgrading eslint to v10 in ~/code/web while we keep going on the checkout bug here", "should_trigger": true},
+  {"query": "delegate this to a worker: add a --dry-run flag to scripts/migrate.ts that prints the SQL instead of executing it, tests in scripts/__tests__", "should_trigger": true},
+  {"query": "this repo is huge and i don't want you burning your whole context reading it. have something else explore packages/renderer and come back with just the entry points and how frames get scheduled", "should_trigger": true},
+  {"query": "research what the current best practice is for rotating postgres credentials with vault dynamic secrets, I want sources, but do it in the background so we can keep working on the terraform", "should_trigger": true},
+  {"query": "I've got a vague idea for an 'undo last deploy' button in the admin panel. can you hand it to a planner to turn into an actual scoped plan, I don't want to make all the product calls myself", "should_trigger": true},
+  {"query": "run a fresh reviewer over my last 3 commits, someone who hasn't seen our conversation", "should_trigger": true},
+  {"query": "fan out: for each of the 4 services in ./services, have a separate agent check whether it still uses the deprecated logger and report back", "should_trigger": true},
+  {"query": "can you split my tmux window so I have a shell on the right running the dev server? `pnpm dev` in ~/code/web", "should_trigger": false},
+  {"query": "write a bash script that starts a tmux session called work with three windows: editor, server, logs", "should_trigger": false},
+  {"query": "my tmux prefix + w list is showing windows from all sessions, how do I make it only show the current session?", "should_trigger": false},
+  {"query": "explain how pi's skill loading works - when does it read SKILL.md vs just the description?", "should_trigger": false},
+  {"query": "review the diff in src/cart/total.ts yourself and tell me if the rounding logic is right, it's like 20 lines", "should_trigger": false},
+  {"query": "fix the failing test in tests/test_dates.py, it's an off-by-one in the week calculation", "should_trigger": false},
+  {"query": "add a python worker pool to jobs/runner.py using concurrent.futures so the 4 export jobs run in parallel instead of sequentially", "should_trigger": false},
+  {"query": "what's the difference between claude sonnet and opus for coding? which should I set as my default model in pi settings", "should_trigger": false},
+  {"query": "search the web for the tmux 3.7 changelog and tell me what changed with extended-keys", "should_trigger": false}
+]

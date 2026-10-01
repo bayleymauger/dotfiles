@@ -31,7 +31,15 @@ HEAD_SHA=$(git rev-parse HEAD)
 
 **2. Dispatch code reviewer subagent:**
 
-Dispatch a `general-purpose` subagent, filling the template at [code-reviewer.md](code-reviewer.md)
+Fill the `prompt:` body of the template at [code-reviewer.md](code-reviewer.md), save it to a file, and spawn it with the `pi-subagent` skill's `reviewer` profile (read that skill's SKILL.md first if you haven't). Run it from the repo so the reviewer can see the commits:
+
+```bash
+S=<this-skill-dir>/../pi-subagent/scripts/pi-subagent
+$S spawn -a reviewer -n review-<short-topic> -f /tmp/review-prompt.md
+$S wait review-<short-topic>
+```
+
+The template's verdict format and tripwires take precedence over the profile's defaults. Use one reviewer per review. The template already tells it not to fan out.
 
 **Placeholders:**
 - `{DESCRIPTION}` - Brief summary of what you built

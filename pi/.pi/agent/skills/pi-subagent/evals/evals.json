@@ -1,0 +1,26 @@
+{
+  "skill_name": "pi-subagent",
+  "evals": [
+    {
+      "id": 1,
+      "name": "parallel-scouts",
+      "prompt": "i want to refactor my neovim config at /home/coder/.config/coderv2/dotfiles/nvim/.config/nvim but first i need a map of it. have two subagents dig in at the same time: one figures out how plugins get loaded (vim.pack, the lua/plugins files, load order), the other lists every custom keymap with the file:line it's defined on. don't edit anything. then give me one combined summary",
+      "expected_output": "Two read-only subagents (scout profile) spawned in parallel in tmux windows, one wait call, then a combined summary of plugin loading plus a keymap list with file:line refs.",
+      "files": []
+    },
+    {
+      "id": 2,
+      "name": "second-opinion",
+      "prompt": "I'm planning to move the zsh plugin cloning (zsh-autosuggestions / zsh-syntax-highlighting) out of install.sh and into .zshrc so a fresh shell self-installs them on first start. Repo is /home/coder/.config/coderv2/dotfiles. Before I commit to this, get a second opinion from a subagent: is this a good idea, what could go wrong, and what would you do instead? Don't change any files.",
+      "expected_output": "One advisor subagent (oracle, or reviewer/planner) spawned read-only; its recommendation relayed with risks (startup latency, network on shell start, failure modes) and an alternative.",
+      "files": []
+    },
+    {
+      "id": 3,
+      "name": "worker-then-review",
+      "prompt": "textutils/slugify.py is buggy, 3 of the 4 tests in textutils/test_slugify.py fail (run with `python3 -m unittest` from inside textutils/). Hand the fix off to a worker subagent, then once it's done have a separate reviewer subagent check the change. Tell me what the reviewer said and whether the tests pass now.",
+      "expected_output": "Worker subagent fixes slugify.py so all 4 tests pass; then a separate reviewer subagent reviews it; final message relays the reviewer verdict and test status.",
+      "files": ["evals/files/textutils"]
+    }
+  ]
+}
