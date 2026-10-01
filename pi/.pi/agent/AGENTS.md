@@ -34,6 +34,12 @@ you're about to change. Fixing the shared function once is both the smaller
 diff and the correct one; patching only the path the report mentions leaves
 sibling callers broken.
 
+### Spacing
+
+Keep related variable declarations together. Add one blank line between
+those declarations and functional blocks (functions, loops, conditionals),
+and between distinct logical blocks.
+
 ### Rules of thumb
 
 - No unrequested abstractions: no interface with one implementation, no factory for one product, no config for a value that never changes.
