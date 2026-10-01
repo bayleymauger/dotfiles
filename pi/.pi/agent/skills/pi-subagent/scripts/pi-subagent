@@ -2,7 +2,8 @@
 # Spawn pi subagents in tmux panes/windows (or background processes without
 # tmux) and collect their results.
 # Run state lives in $PI_SUBAGENT_DIR/<name>/ (default /tmp/pi-subagents):
-#   prompt.md, run.sh, mode, pane|pid, log, output.md, exit_code, .done
+#   prompt.md, run.sh, mode, parent, pane|pid, log, output.md, exit_code, .done,
+#   .collected (output already handed to the parent; see extensions/notify.ts)
 set -euo pipefail
 
 ROOT=${PI_SUBAGENT_DIR:-/tmp/pi-subagents}
@@ -120,6 +121,7 @@ cmd_spawn() {
   [[ -s $dir/prompt.md ]] || { rm -rf "$dir"; die "no prompt given"; }
   echo "$mode" >"$dir/mode"
   echo "${agent:--}" >"$dir/agent"
+  echo "${PI_SESSION_ID:-}" >"$dir/parent"
 
   local -a args=()
   if [[ -z $model && -n $pf ]]; then
@@ -204,6 +206,7 @@ cmd_wait() {
       fi
       sleep 2
     done
+    touch "$dir/.collected"
     echo "=== $n ($(status "$dir"), exit $(cat "$dir/exit_code" 2>/dev/null || echo '?')) ==="
     if [[ -s $dir/output.md ]]; then cat "$dir/output.md"
     else
@@ -222,7 +225,7 @@ cmd_send() {
   alive "$dir" || die "$n's pane is gone"
   if [[ ${1:-} == -f ]]; then msg=$(cat -- "${2:?send -f: FILE required}"); else msg=${1:?send: MESSAGE required}; fi
   pane=$(<"$dir/pane")
-  rm -f "$dir/.done"
+  rm -f "$dir/.done" "$dir/.collected"
   # bracketed paste keeps multi-line messages from submitting early
   printf '%s' "$msg" | tmux load-buffer -b "pi-subagent-$n" -
   tmux paste-buffer -p -d -b "pi-subagent-$n" -t "$pane"

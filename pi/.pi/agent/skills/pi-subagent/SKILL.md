@@ -127,6 +127,12 @@ and keeps the subagent off your reasoning.
   1800s timeout and exits 124 on timeout. Give your bash tool call a timeout
   at least as long, or pass `-t`. After a timeout, `peek` to check progress,
   then `wait` again or `kill`.
+- You don't have to block. `extensions/notify.ts` (loaded through
+  `settings.json`) watches this session's runs. When the session is idle, it
+  posts each finished run's answer as a message and starts a turn, so you can
+  spawn a run, end your turn or do other work, and pick the result up then.
+  Runs already collected by `wait` aren't posted again. Inside tmux it also
+  flashes `pi-subagent: NAME finished (exit N)` in the status bar for 5s.
 - Spawn all independent runs first, then make one `wait` call for all of
   them, so they run in parallel. Run only one `worker` at a time on the same
   checkout, because parallel writers clobber each other.
@@ -138,7 +144,7 @@ and keeps the subagent off your reasoning.
   "Need from parent" items.
 
 Run state lives in `/tmp/pi-subagents/<name>/` (`prompt.md`, `system.md`,
-`run.sh`, `output.md`, `exit_code`, `log`). Override it with
+`run.sh`, `output.md`, `exit_code`, `log`, `parent`, `.collected`). Override it with
 `PI_SUBAGENT_DIR`. Names must be unique, so reuse one only after deleting its
 directory.
 
