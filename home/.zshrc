@@ -7,6 +7,10 @@ elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
+# --- pi ---
+# Installed by pi's official installer (see install.sh), not Homebrew.
+export PATH="$HOME/.pi/agent/bin:$PATH"
+
 # --- Zsh Plugin Loading ---
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 

@@ -79,28 +79,118 @@ install_packages_linux() {
   success "All packages installed via Homebrew"
 }
 
+# The font is only rendered by a local terminal emulator. On a headless box
+# you SSH into, glyphs are drawn by the client machine's terminal, so the
+# font is useless there. Override detection with INSTALL_NERD_FONT=1 or =0.
+has_gui() {
+  case "${INSTALL_NERD_FONT:-}" in
+    1|true|yes) return 0 ;;
+    0|false|no) return 1 ;;
+  esac
+
+  # macOS always has a desktop, even when this script runs over SSH.
+  [ "$PLATFORM" = "macos" ] && return 0
+
+  # A running graphical session (covers running the script inside it).
+  if [ -n "${DISPLAY:-}" ] || [ -n "${WAYLAND_DISPLAY:-}" ] || \
+    [ -n "${XDG_CURRENT_DESKTOP:-}" ]; then
+    return 0
+  fi
+
+  # A desktop machine reached over SSH: it boots into a graphical target.
+  if command_exists systemctl && \
+    [ "$(systemctl get-default 2>/dev/null)" = "graphical.target" ]; then
+    return 0
+  fi
+
+  return 1
+}
+
+nerd_font_installed() {
+  local dirs=()
+  if [ "$PLATFORM" = "macos" ]; then
+    dirs=("$HOME/Library/Fonts" /Library/Fonts)
+  else
+    # Not `fc-list | grep -q`: grep exits on the first match, fc-list gets
+    # SIGPIPE, and pipefail turns that into a failure.
+    if command_exists fc-list && \
+      grep -qi "JetBrainsMono Nerd Font" <(fc-list 2>/dev/null); then
+      return 0
+    fi
+    dirs=("$HOME/.local/share/fonts" "$HOME/.fonts" /usr/local/share/fonts /usr/share/fonts)
+  fi
+
+  local dir
+  for dir in "${dirs[@]}"; do
+    [ -d "$dir" ] || continue
+    if [ -n "$(find "$dir" -iname 'JetBrainsMonoNerdFont*' -print -quit 2>/dev/null)" ]; then
+      return 0
+    fi
+  done
+  return 1
+}
+
 install_nerd_font() {
-  # Not `fc-list | grep -q`: grep exits on the first match, fc-list gets
-  # SIGPIPE, and pipefail turns that into a failure, so it always reinstalled.
-  if grep -qi "JetBrainsMono Nerd Font" <(fc-list 2>/dev/null); then
+  if ! has_gui; then
+    info "No GUI detected - skipping JetBrains Mono Nerd Font (INSTALL_NERD_FONT=1 to force)"
+    return
+  fi
+
+  if nerd_font_installed; then
     info "JetBrains Mono Nerd Font already installed"
     return
   fi
 
   if [ "$PLATFORM" = "macos" ]; then
     info "Installing JetBrains Mono Nerd Font via Homebrew..."
-    brew install --cask font-jetbrains-mono-nerd-font 2>/dev/null || warn "Font already installed or brew cask failed"
+    if ! brew install --cask font-jetbrains-mono-nerd-font; then
+      warn "Font install via Homebrew failed"
+      return
+    fi
   else
+    if ! command_exists unzip; then
+      warn "unzip not found - skipping JetBrains Mono Nerd Font install"
+      return
+    fi
     info "Installing JetBrains Mono Nerd Font..."
-    local FONT_DIR="$HOME/.local/share/fonts"
+    local FONT_DIR="$HOME/.local/share/fonts/JetBrainsMonoNerdFont"
+    local ZIP="${TMPDIR:-/tmp}/JetBrainsMono.$$.zip"
     mkdir -p "$FONT_DIR"
-    curl -fLo /tmp/JetBrainsMono.zip \
-      "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"
-    unzip -o /tmp/JetBrainsMono.zip -d "$FONT_DIR"
-    fc-cache -f
-    rm -f /tmp/JetBrainsMono.zip
+    if ! curl -fLo "$ZIP" \
+      "https://github.com/ryanoasis/nerd-fonts/releases/latest/download/JetBrainsMono.zip"; then
+      rm -f "$ZIP"
+      warn "Font download failed"
+      return
+    fi
+    unzip -oq "$ZIP" '*.ttf' -d "$FONT_DIR"
+    rm -f "$ZIP"
+    command_exists fc-cache && fc-cache -f "$FONT_DIR"
   fi
   success "JetBrains Mono Nerd Font installed"
+}
+
+# Where pi's official installer puts the `pi` binary. Keep in sync with the
+# PATH entry in home/.zshrc.
+PI_BIN_DIR="$HOME/.pi/agent/bin"
+
+install_pi() {
+  # Put PI_BIN_DIR on PATH first: the installer then uses it as its bin dir
+  # and sees pi is already reachable, so it doesn't offer to append a PATH
+  # line to ~/.zshrc (which is a symlink into this repo).
+  export PATH="$PI_BIN_DIR:$PATH"
+
+  if command_exists pi; then
+    info "pi already installed (update with pi's self-update)"
+    return
+  fi
+
+  info "Installing pi coding agent..."
+  # Runs after the Brewfile so the installer finds Homebrew's node/npm.
+  if curl -fsSL https://pi.dev/install.sh | sh; then
+    success "pi installed"
+  else
+    warn "pi install failed - re-run: curl -fsSL https://pi.dev/install.sh | sh"
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -213,6 +303,7 @@ main() {
     install_packages_linux
   fi
   install_nerd_font
+  install_pi
 
   echo ""
   info "=== Stowing dotfiles ==="

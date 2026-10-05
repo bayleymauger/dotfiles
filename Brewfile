@@ -15,9 +15,6 @@ cask "ghostty"
 # Editor
 brew "neovim"
 
-# AI
-brew "pi-coding-agent"
-
 # Multiplexer
 brew "herdr"
 
@@ -44,6 +41,3 @@ brew "atuin"
 brew "fzf"
 brew "eza"
 brew "bat"
-
-# Nerd Font
-cask "font-jetbrains-mono-nerd-font"

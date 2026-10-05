@@ -14,11 +14,12 @@ The script handles everything on **macOS** and **Linux**:
 
 1. Install Homebrew (if not present)
 2. Install all packages from `Brewfile` via Homebrew
-3. Install JetBrains Mono Nerd Font
-4. Symlink dotfiles via Stow
-5. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
-6. Configure git hooks (gitleaks secret scanning on push)
-7. Install Neovim plugins
+3. Install JetBrains Mono Nerd Font (only on GUI machines, skipped if already installed; force with `INSTALL_NERD_FONT=1` or skip with `=0`)
+4. Install the pi coding agent via its official installer (`curl -fsSL https://pi.dev/install.sh | sh`)
+5. Symlink dotfiles via Stow
+6. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
+7. Configure git hooks (gitleaks secret scanning on push)
+8. Install Neovim plugins
 
 It's safe to re-run at any time.
 
