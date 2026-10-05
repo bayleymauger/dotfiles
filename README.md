@@ -17,7 +17,8 @@ The script handles everything on **macOS** and **Linux**:
 3. Install JetBrains Mono Nerd Font
 4. Symlink dotfiles via Stow
 5. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
-6. Install Neovim plugins
+6. Configure git hooks (gitleaks secret scanning on push)
+7. Install Neovim plugins
 
 It's safe to re-run at any time.
 
@@ -56,6 +57,14 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 - **bat** - modern `cat` replacement
 - **zsh-autosuggestions** - fish-like autosuggestions
 - **zsh-syntax-highlighting** - command syntax highlighting
+
+## Git Hooks
+
+`git-hooks/pre-push` runs [gitleaks](https://github.com/gitleaks/gitleaks)
+over the repo's git history before every push. `install.sh` wires it up via
+`git config core.hooksPath ./git-hooks`. If gitleaks isn't installed, the hook
+warns and lets the push through; bypass it in an emergency with
+`git push --no-verify`.
 
 ## Adding New Dotfiles
 

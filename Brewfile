@@ -26,6 +26,7 @@ brew "tree-sitter"
 brew "tree-sitter-cli"
 brew "lazygit"
 brew "node"
+brew "gitleaks"
 brew "ripgrep"
 
 # Formatters

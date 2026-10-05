@@ -14,6 +14,7 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
 ├── install.sh                  # One-command setup script
 ├── uninstall.sh                # Unstows home/
 ├── terminfo/                   # xterm-ghostty terminfo entry (installed by install.sh, not stowed)
+├── git-hooks/pre-push          # gitleaks secret scan on push (wired via core.hooksPath, not stowed)
 ├── README.md
 └── home/                       # The single Stow package
     ├── AGENTS.md               # Linked to ~/AGENTS.md (global agent instructions)
@@ -52,7 +53,7 @@ git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
-The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font, stows `home/`, installs the `xterm-ghostty` terminfo entry, and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew (no nvm); there is no Python version manager.
+The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font, stows `home/`, installs the `xterm-ghostty` terminfo entry, points `core.hooksPath` at `git-hooks/` (gitleaks pre-push scan), and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew (no nvm); there is no Python version manager.
 
 ### Stow Management
 ```bash

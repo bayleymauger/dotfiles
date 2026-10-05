@@ -163,6 +163,16 @@ setup_terminfo() {
 }
 
 # ---------------------------------------------------------------------------
+# Git hooks (gitleaks secret scanning)
+# ---------------------------------------------------------------------------
+
+setup_git_hooks() {
+  info "Configuring git hooks..."
+  git -C "$DOTFILES_DIR" config core.hooksPath ./git-hooks
+  success "git hooks configured (gitleaks scans on push)"
+}
+
+# ---------------------------------------------------------------------------
 # Neovim
 # ---------------------------------------------------------------------------
 
@@ -211,6 +221,7 @@ main() {
   echo ""
   info "=== Post-setup initialization ==="
   setup_terminfo
+  setup_git_hooks
   setup_neovim
 
   echo ""
