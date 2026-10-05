@@ -1,9 +1,0 @@
-{
-  "defaultProvider": "anthropic",
-  "defaultModel": "claude-opus-5-5",
-  "extensions": ["skills/pi-subagent/extensions/notify.ts"],
-  "lastChangelogVersion": "0.99.2",
-  "warnings": {
-    "anthropicExtraUsage": false
-  }
-}

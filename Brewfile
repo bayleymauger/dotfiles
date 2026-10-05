@@ -6,6 +6,8 @@ brew "wget"
 brew "make"
 brew "gcc"
 brew "zsh"
+brew "zsh-autosuggestions"
+brew "zsh-syntax-highlighting"
 
 # Terminal
 cask "ghostty"
@@ -17,16 +19,13 @@ brew "neovim"
 brew "pi-coding-agent"
 
 # Multiplexer
-brew "tmux"
+brew "herdr"
 
 # Dev tools
 brew "tree-sitter"
 brew "tree-sitter-cli"
 brew "lazygit"
-brew "pyenv"
-brew "pyenv-virtualenv"
-brew "nvm"
-brew "gitleaks"
+brew "node"
 brew "ripgrep"
 
 # Formatters

@@ -1,20 +1,14 @@
 # --- Homebrew ---
-# Must run before the config loop below: nvm.zsh and pyenv.zsh both rely on
-# Homebrew-installed tools (and nvm.zsh on $HOMEBREW_PREFIX) being on PATH.
+# Must run first: everything below is Homebrew-installed and relies on
+# $HOMEBREW_PREFIX and PATH.
 if [ -x /opt/homebrew/bin/brew ]; then
   eval "$(/opt/homebrew/bin/brew shellenv)"
 elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-# --- Zsh Config Files ---
-for config in ~/.config/zsh/*.zsh; do
-  [ -f "$config" ] && source "$config"
-done
-
 # --- Zsh Plugin Loading ---
-[ -d ~/.zsh/zsh-autosuggestions ] && source ~/.zsh/zsh-autosuggestions/zsh-autosuggestions.zsh
-[ -d ~/.zsh/zsh-syntax-highlighting ] && source ~/.zsh/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
 # --- Tool Initializations ---
 eval "$(starship init zsh)"
@@ -45,4 +39,8 @@ bindkey '^[[A' atuin-up-search
 
 # --- Environment Variables ---
 export HOMEBREW_EDITOR=nvim
+
+# --- Syntax Highlighting ---
+# Must be sourced last so it can wrap every widget defined above.
+source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 

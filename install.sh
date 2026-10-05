@@ -9,12 +9,6 @@ set -euo pipefail
 
 DOTFILES_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
-# The Brewfile taps a personal third-party tap (dmtrKovalenko/fff) for
-# fff-mcp. Recent Homebrew refuses to install from an untrusted tap in
-# non-interactive contexts (like devbox provisioning); we trust it explicitly
-# since it's a deliberate, known dependency.
-export HOMEBREW_NO_REQUIRE_TAP_TRUST=1
-
 # ---------------------------------------------------------------------------
 # Helpers
 # ---------------------------------------------------------------------------
@@ -23,18 +17,6 @@ info() { echo -e "  \033[38;5;252m $*\033[0m"; }
 success() { echo -e "  \033[32m\033[1m 󰌶 $*\033[0m"; }
 warn() { echo -e "  \033[38;5;137m 󰀪 $*\033[0m"; }
 error() { echo -e "  \033[31m\033[1m  $*\033[0m"; }
-
-link() {
-  mkdir -p "$(dirname "$2")"
-  if [ -L "$2" ]; then
-    ln -sfn "$1" "$2"
-  elif [ -e "$2" ]; then
-    warn "Skipping $2, real file exists (move it aside to link)."
-  else
-    ln -s "$1" "$2"
-    success "Linked $1 → $2"
-  fi
-}
 
 command_exists() {
   command -v "$1" &>/dev/null
@@ -98,7 +80,9 @@ install_packages_linux() {
 }
 
 install_nerd_font() {
-  if fc-list 2>/dev/null | grep -qi "JetBrainsMono Nerd Font"; then
+  # Not `fc-list | grep -q`: grep exits on the first match, fc-list gets
+  # SIGPIPE, and pipefail turns that into a failure, so it always reinstalled.
+  if grep -qi "JetBrainsMono Nerd Font" <(fc-list 2>/dev/null); then
     info "JetBrains Mono Nerd Font already installed"
     return
   fi
@@ -123,30 +107,35 @@ install_nerd_font() {
 # Stow
 # ---------------------------------------------------------------------------
 
-# Packages we manage with Stow. Each is a top-level directory in this repo
-# whose contents mirror the paths they should occupy under $HOME, e.g.
-# nvim/.config/nvim/init.lua -> ~/.config/nvim/init.lua
-STOW_PACKAGES=(pi ghostty nvim zsh tmux)
+# All configs live in a single Stow package, home/, whose contents mirror
+# the paths they should occupy under $HOME, e.g.
+# home/.config/nvim/init.lua -> ~/.config/nvim/init.lua
+STOW_PACKAGE=home
+
+# Directories that must exist as real directories before stowing. Stow
+# "folds" a missing target directory into a single symlink pointing at the
+# repo, so anything an app writes there (pi's auth.json and sessions, herdr's
+# logs and sockets, every other app's ~/.config dir) would land in the repo.
+RUNTIME_DIRS=(
+  "$HOME/.config"
+  "$HOME/.config/herdr"
+  "$HOME/.pi"
+  "$HOME/.pi/agent"
+)
 
 stow_packages() {
   info "Symlinking dotfiles with Stow..."
 
   cd "$DOTFILES_DIR"
+  mkdir -p "${RUNTIME_DIRS[@]}"
 
-  # -R (restow) makes this safe to run repeatedly: it relinks packages that
+  # -R (restow) makes this safe to run repeatedly: it relinks files that
   # are already stowed instead of erroring on the existing symlinks.
-  # Each package is stowed individually so a conflict (e.g. a real,
-  # non-symlinked file already at the target path) only skips that one
-  # package instead of aborting the whole script.
-  for pkg in "${STOW_PACKAGES[@]}"; do
-    if stow -R -t "$HOME" "$pkg"; then
-      success "Stowed $pkg"
-    else
-      warn "Failed to stow $pkg — a real file may already exist at the target path (move it aside and re-run to link it)"
-    fi
-  done
-
-  success "All dotfiles stowed"
+  if stow -R -t "$HOME" "$STOW_PACKAGE"; then
+    success "All dotfiles stowed"
+  else
+    warn "Failed to stow $STOW_PACKAGE/ - a real file may already exist at a target path (move it aside and re-run)"
+  fi
 }
 
 # ---------------------------------------------------------------------------
@@ -160,7 +149,7 @@ setup_terminfo() {
   # terminal xterm-ghostty". Install the entry directly so it works
   # regardless of what client terminal connects.
   if ! command_exists tic; then
-    warn "tic not found — skipping terminfo install for xterm-ghostty"
+    warn "tic not found - skipping terminfo install for xterm-ghostty"
     return
   fi
 
@@ -174,200 +163,23 @@ setup_terminfo() {
 }
 
 # ---------------------------------------------------------------------------
-# Git hooks (gitleaks secret scanning)
-# ---------------------------------------------------------------------------
-
-setup_git_hooks() {
-  info "Configuring git hooks..."
-  git -C "$DOTFILES_DIR" config core.hooksPath ./git-hooks
-  success "git hooks configured (gitleaks scans on push)"
-}
-
-# ---------------------------------------------------------------------------
-# Tmux Plugin Manager (TPM)
-# ---------------------------------------------------------------------------
-
-setup_tmux() {
-  local TPM_DIR="$HOME/.tmux/plugins/tpm"
-
-  if [ -d "$TPM_DIR" ]; then
-    info "TPM already installed, updating..."
-    git -C "$TPM_DIR" pull --quiet
-  else
-    info "Installing TPM..."
-    git clone https://github.com/tmux-plugins/tpm "$TPM_DIR"
-  fi
-
-  info "Installing tmux plugins via TPM..."
-  "$TPM_DIR/bin/install_plugins" || warn "TPM plugin install failed — open tmux and press prefix + I"
-  success "tmux plugins installed"
-}
-
-# ---------------------------------------------------------------------------
-# Zsh Plugins
-# ---------------------------------------------------------------------------
-
-setup_zsh_plugins() {
-  mkdir -p ~/.zsh
-
-  if [ -d ~/.zsh/zsh-autosuggestions ]; then
-    info "zsh-autosuggestions already installed, updating..."
-    git -C ~/.zsh/zsh-autosuggestions pull --quiet
-  else
-    info "Cloning zsh-autosuggestions..."
-    git clone https://github.com/zsh-users/zsh-autosuggestions ~/.zsh/zsh-autosuggestions
-  fi
-
-  if [ -d ~/.zsh/zsh-syntax-highlighting ]; then
-    info "zsh-syntax-highlighting already installed, updating..."
-    git -C ~/.zsh/zsh-syntax-highlighting pull --quiet
-  else
-    info "Cloning zsh-syntax-highlighting..."
-    git clone https://github.com/zsh-users/zsh-syntax-highlighting ~/.zsh/zsh-syntax-highlighting
-  fi
-
-  success "Zsh plugins installed"
-}
-
-# ---------------------------------------------------------------------------
 # Neovim
 # ---------------------------------------------------------------------------
 
 setup_neovim() {
   if ! command_exists nvim; then
-    warn "Neovim not found — skipping plugin setup"
+    warn "Neovim not found - skipping plugin setup"
     return
   fi
 
   info "Installing Neovim plugins (headless)..."
   # The config uses vim.pack (nvim 0.12+ built-in package manager)
   # Open nvim briefly to trigger plugin downloads on first run
-  nvim --headless -c "lua pcall(vim.pack.sync)" -c "qa" 2>/dev/null || \
-    nvim --headless -c "lua for _, p in ipairs(vim.pack.list()) do if not p.installed then vim.pack.install(p.name) end end" -c "qa" 2>/dev/null || \
-    warn "Neovim plugin install had issues — open nvim to retry"
-  success "Neovim plugins installed"
-}
-
-# ---------------------------------------------------------------------------
-# NVM + Node.js
-# ---------------------------------------------------------------------------
-
-setup_nvm() {
-  local NVM_DIR="${NVM_DIR:-$HOME/.nvm}"
-
-  if [ -d "$NVM_DIR" ] && [ -f "$NVM_DIR/nvm.sh" ]; then
-    info "NVM already installed"
+  if nvim --headless -c "lua pcall(vim.pack.sync)" -c "qa" 2>/dev/null || \
+    nvim --headless -c "lua for _, p in ipairs(vim.pack.list()) do if not p.installed then vim.pack.install(p.name) end end" -c "qa" 2>/dev/null; then
+    success "Neovim plugins installed"
   else
-    info "Installing NVM..."
-    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh | bash
-  fi
-
-  # nvm's own script isn't -e/-u safe (it references unset variables and
-  # can return/exit in ways that would otherwise kill this whole script
-  # since sourcing runs directly in our process). Run it in a subshell so
-  # any of that is contained and only ever downgrades to a warning here.
-  (
-    set +u
-    export NVM_DIR="$HOME/.nvm"
-    # shellcheck source=/dev/null
-    [ -s "$NVM_DIR/nvm.sh" ] && . "$NVM_DIR/nvm.sh"
-
-    if command_exists nvm; then
-      NODE_VERSION=$(nvm ls | grep -oE 'v[0-9]+' | grep -oE '[0-9]+' | sort -rn | head -1)
-      if [ -z "$NODE_VERSION" ]; then
-        info "Installing Node.js LTS..."
-        nvm install --lts
-        nvm use --lts
-        nvm alias default "lts/*"
-      else
-        info "Node.js v$NODE_VERSION already installed"
-      fi
-      success "NVM + Node.js ready"
-    else
-      warn "NVM not loaded — open a new shell and run 'nvm install --lts'"
-    fi
-  ) || warn "NVM/Node.js setup hit an issue — open a new shell and run 'nvm install --lts' manually"
-}
-
-# ---------------------------------------------------------------------------
-# pyenv + Python
-# ---------------------------------------------------------------------------
-
-setup_pyenv() {
-  if command_exists pyenv; then
-    info "pyenv already installed"
-  else
-    info "Installing pyenv..."
-    brew install pyenv pyenv-virtualenv
-  fi
-
-  export PYENV_ROOT="$HOME/.pyenv"
-  export PATH="$PYENV_ROOT/bin:$PATH"
-  eval "$(pyenv init -)" 2>/dev/null || true
-
-  if command_exists pyenv; then
-    # We deliberately don't auto-build a Python version here: building the
-    # latest CPython from source can fail against an older system glibc
-    # (e.g. Ubuntu 22.04's glibc 2.35 vs. Python 3.14 needing glibc 2.38).
-    # Run `pyenv install <version> && pyenv global <version>` yourself when
-    # you need a specific Python.
-    info "pyenv ready — run 'pyenv install <version>' to install a Python"
-
-    # Enable pyenv-virtualenv if available
-    if [ -d "$PYENV_ROOT/plugins/pyenv-virtualenv" ]; then
-      eval "$(pyenv virtualenv-init -)" 2>/dev/null || true
-    elif command_exists brew && brew list pyenv-virtualenv &>/dev/null; then
-      eval "$(pyenv virtualenv-init -)" 2>/dev/null || true
-    fi
-
-    success "pyenv ready"
-  else
-    warn "pyenv not loaded — open a new shell to complete setup"
-  fi
-}
-
-# ---------------------------------------------------------------------------
-# Set default shell to zsh
-# ---------------------------------------------------------------------------
-
-setup_default_shell() {
-  local ZSH_PATH
-  ZSH_PATH="$(which zsh)"
-
-  if [ "$PLATFORM" = "macos" ]; then
-    local CURRENT_SHELL
-    CURRENT_SHELL=$(dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}')
-    if [ "$CURRENT_SHELL" != "$ZSH_PATH" ]; then
-      info "Setting zsh as default shell..."
-      if ! grep -q "$ZSH_PATH" /etc/shells; then
-        info "Adding $ZSH_PATH to /etc/shells (may ask for sudo)..."
-        echo "$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null
-      fi
-      chsh -s "$ZSH_PATH"
-      success "Default shell set to zsh"
-    else
-      info "zsh is already the default shell"
-    fi
-  else
-    local CURRENT_SHELL
-    CURRENT_SHELL=$(getent passwd "$USER" | cut -d: -f7)
-    if [ "$CURRENT_SHELL" != "$ZSH_PATH" ]; then
-      info "Setting zsh as default shell..."
-      if ! grep -q "$ZSH_PATH" /etc/shells; then
-        info "Adding $ZSH_PATH to /etc/shells (may ask for sudo)..."
-        echo "$ZSH_PATH" | sudo tee -a /etc/shells >/dev/null
-      fi
-      # usermod edits /etc/passwd directly and doesn't need a PAM
-      # conversation, which makes it more reliable than chsh in minimal
-      # container/devbox environments.
-      if sudo usermod -s "$ZSH_PATH" "$USER"; then
-        success "Default shell set to zsh (open a new session for it to take effect)"
-      else
-        warn "Could not set zsh as default shell — run: chsh -s $ZSH_PATH"
-      fi
-    else
-      info "zsh is already the default shell"
-    fi
+    warn "Neovim plugin install had issues - open nvim to retry"
   fi
 }
 
@@ -399,13 +211,7 @@ main() {
   echo ""
   info "=== Post-setup initialization ==="
   setup_terminfo
-  setup_git_hooks
-  setup_tmux
-  setup_zsh_plugins
   setup_neovim
-  setup_nvm
-  setup_pyenv
-  setup_default_shell
 
   echo ""
   success "All done! Open a new terminal to use your fresh setup."

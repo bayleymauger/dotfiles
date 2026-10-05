@@ -1,0 +1,11 @@
+onboarding = false
+
+[theme]
+name = "rose-pine"
+
+[theme.custom]
+sidebar_bg = "transparent"
+panel_bg = "transparent"
+surface0 = "transparent"
+surface1 = "transparent"
+active_row_bg = "transparent"

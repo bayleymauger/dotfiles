@@ -2,40 +2,46 @@
 
 ## Overview
 
-This is a personal dotfiles repository using **GNU Stow** to symlink configuration files into `$HOME`. It is not a software project — there is no build, test, or deploy pipeline. The repository manages configuration for: Codex, Neovim (Lua-based, nvim 0.12+), Zsh, tmux, and Ghostty terminal.
+This is a personal dotfiles repository using **GNU Stow** to symlink configuration files into `$HOME`. It is not a software project - there is no build, test, or deploy pipeline. The repository manages configuration for: Neovim (Lua-based, nvim 0.12+), Zsh, Ghostty terminal, herdr (terminal multiplexer), and the pi coding agent (settings + custom skills).
 
 ## Repository Structure
 
+Everything that gets symlinked lives in a single Stow package, `home/`, whose contents mirror their paths under `$HOME` (e.g. `home/.config/nvim/init.lua` -> `~/.config/nvim/init.lua`).
+
 ```
 .
-├── Brewfile                    # Homebrew dependencies (macOS)
-├── install.sh                    # One-command setup script
-├── codex/                       # Stow package for home-directory Codex guidance
-│   └── AGENTS.md                # Linked to ~/AGENTS.md
-├── .config/
-│   ├── ghostty/                # Ghostty terminal config + cursor shader
-│   │   ├── config
-│   │   └── cursor.glsl
-│   ├── nvim/                   # Neovim config (vim.pack, built-in package manager)
-│   │   ├── init.lua            # Single-file config: options, keymaps, plugins, LSP
-│   │   ├── stylua.toml
-│   │   ├── nvim-pack-lock.json # vim.pack lockfile (pinned revisions)
-│   │   └── lua/
-│   │       └── plugins/        # Supplementary plugin configs
-│   │           ├── autopairs.lua
-│   │           ├── autotag.lua
-│   │           ├── debug.lua
-│   │           ├── gitsigns.lua
-│   │           ├── indent_line.lua
-│   │           ├── lint.lua
-│   │           ├── oil.lua
-│   │           ├── tmux.lua
-│   │           ├── trouble.lua
-│   │           └── ts_comments.lua
-│   └── zsh/                    # Additional zsh config sourced by .zshrc
-├── .tmux.conf                  # tmux config (tokyonight theme, TPM, vim-aware navigation)
-├── .zshrc                      # Zsh config (aliases, tool init, plugin sourcing)
-└── README.md
+├── Brewfile                    # Homebrew dependencies (macOS + Linux)
+├── install.sh                  # One-command setup script
+├── uninstall.sh                # Unstows home/
+├── terminfo/                   # xterm-ghostty terminfo entry (installed by install.sh, not stowed)
+├── README.md
+└── home/                       # The single Stow package
+    ├── AGENTS.md               # Linked to ~/AGENTS.md (global agent instructions)
+    ├── .zshrc                  # Zsh config (aliases, tool init, plugin sourcing)
+    ├── .pi/agent/
+    │   ├── settings.json       # pi settings (default model, extensions, UI)
+    │   └── skills/             # Custom pi skills (brave-search, browser-tools, pi-subagent, ...)
+    └── .config/
+        ├── ghostty/            # Ghostty terminal config + cursor shader
+        │   ├── config
+        │   └── cursor.glsl
+        ├── herdr/
+        │   └── config.toml     # herdr multiplexer config (rose-pine, transparent panels)
+        └── nvim/               # Neovim config (vim.pack, built-in package manager)
+            ├── init.lua        # Single-file config: options, keymaps, plugins, LSP
+            ├── stylua.toml
+            ├── nvim-pack-lock.json # vim.pack lockfile (pinned revisions)
+            └── lua/
+                └── plugins/    # Supplementary plugin configs
+                    ├── autopairs.lua
+                    ├── autotag.lua
+                    ├── debug.lua
+                    ├── gitsigns.lua
+                    ├── indent_line.lua
+                    ├── lint.lua
+                    ├── oil.lua
+                    ├── trouble.lua
+                    └── ts_comments.lua
 ```
 
 ## Key Commands
@@ -46,23 +52,24 @@ git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
-The script installs dependencies (Homebrew/apt/dnf/pacman), stows configs, and initializes TPM, NVM, pyenv, and Neovim plugins.
+The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font, stows `home/`, installs the `xterm-ghostty` terminfo entry, and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew (no nvm); there is no Python version manager.
 
 ### Stow Management
 ```bash
-cd ~/dotfiles && stow */          # Symlink all configs to $HOME
-cd ~/dotfiles && stow -D nvim     # Remove symlinks for a package
+cd ~/dotfiles && stow -R -t ~ home   # Symlink (or relink) all configs into $HOME
+cd ~/dotfiles && stow -D -t ~ home   # Remove all symlinks (same as ./uninstall.sh)
 ```
+To add a new dotfile, place it under `home/` at the path it should occupy relative to `$HOME`, then restow.
 
 ### Neovim Plugin Management
-Inside Neovim — plugins use the built-in `vim.pack` API (nvim 0.12+), not lazy.nvim:
+Inside Neovim - plugins use the built-in `vim.pack` API (nvim 0.12+), not lazy.nvim:
 - Plugins auto-install on first open via `vim.pack.add { url }`
-- `:packadd <name>` — manually load a plugin
-- `:PackUpdate` — update all `vim.pack` plugins to latest
-- `:PackClean` — remove plugins on disk no longer requested by `init.lua` (also prunes `nvim-pack-lock.json`)
-- `:Mason` — LSP/tool installer UI
-- `:ConformInfo` — Check formatter status
-- `:Telescope colorscheme` — Browse installed themes
+- `:packadd <name>` - manually load a plugin
+- `:PackUpdate` - update all `vim.pack` plugins to latest
+- `:PackClean` - remove plugins on disk no longer requested by `init.lua` (also prunes `nvim-pack-lock.json`)
+- `:Mason` - LSP/tool installer UI
+- `:ConformInfo` - Check formatter status
+- `:Telescope colorscheme` - Browse installed themes
 
 ### Shell Aliases (defined in .zshrc)
 - `vim` → `nvim`
@@ -79,35 +86,34 @@ Inside Neovim — plugins use the built-in `vim.pack` API (nvim 0.12+), not lazy
 Single-file Lua config (`init.lua`) with supplementary plugin files in `lua/plugins/`. Leader key is `<Space>`. Uses nvim 0.12+ built-in `vim.pack` for package management (not lazy.nvim).
 
 ### Config Structure (init.lua sections)
-1. **Options** — leader, vim.o settings, basic autocmds
-2. **Keymaps** — window navigation, diagnostics, terminal mode, `PackUpdate`/`PackClean` commands
-3. **Plugin Manager** — `vim.pack` build hooks (telescope-fzf-native, LuaSnip, treesitter)
-4. **UI/Core UX** — guess-indent, gitsigns, which-key, tokyonight, todo-comments, mini modules
-5. **Search & Navigation** — Telescope + extensions, LSP picker keymaps
-6. **LSP** — fidget, mason, mason-lspconfig, mason-tool-installer, server configs (vtsls, stylua, terraformls, lua_ls)
-7. **Formatting** — conform.nvim (format-on-save disabled by default, manual via `<leader>f`)
-8. **Autocomplete** — blink.cmp + LuaSnip snippets (with friendly-snippets), source shown in completion menu
-9. **Treesitter** — parser installation, auto-attach, indent (`nvim-treesitter` `main` branch)
-10. **Plugins** — loads `lua/plugins/*.lua` files
+1. **Options** - leader, vim.o settings, basic autocmds
+2. **Keymaps** - window navigation, diagnostics, terminal mode, `PackUpdate`/`PackClean` commands
+3. **Plugin Manager** - `vim.pack` build hooks (telescope-fzf-native, LuaSnip, treesitter)
+4. **UI/Core UX** - guess-indent, gitsigns, which-key, rose-pine (transparent background), todo-comments, mini modules
+5. **Search & Navigation** - Telescope + extensions, LSP picker keymaps
+6. **LSP** - fidget, mason, mason-lspconfig, mason-tool-installer, server configs (vtsls, rust_analyzer, stylua, terraformls, lua_ls)
+7. **Formatting** - conform.nvim (format-on-save disabled by default, manual via `<leader>f`)
+8. **Autocomplete** - blink.cmp + LuaSnip snippets (with friendly-snippets), source shown in completion menu
+9. **Treesitter** - parser installation, auto-attach, indent (`nvim-treesitter` `main` branch)
+10. **Plugins** - loads `lua/plugins/*.lua` files
 
 ### Supplementary Plugins (lua/plugins/)
-- `autopairs.lua` — nvim-autopairs
-- `autotag.lua` — nvim-ts-autotag (auto-close/rename HTML/JSX tags)
-- `debug.lua` — nvim-dap + dap-ui + mason-nvim-dap (Go/delve)
-- `gitsigns.lua` — gitsigns recommended keymaps (hunk nav, stage, blame, diff)
-- `indent_line.lua` — indent-blankline.nvim
-- `lint.lua` — nvim-lint (markdownlint)
-- `oil.lua` — oil.nvim file browser (`\` keymap)
-- `tmux.lua` — tmux.nvim (seamless pane navigation)
-- `trouble.lua` — trouble.nvim (diagnostics/symbols/LSP results list)
-- `ts_comments.lua` — ts-comments.nvim (treesitter-aware `commentstring`)
+- `autopairs.lua` - nvim-autopairs
+- `autotag.lua` - nvim-ts-autotag (auto-close/rename HTML/JSX tags)
+- `debug.lua` - nvim-dap + dap-ui + mason-nvim-dap (Go/delve)
+- `gitsigns.lua` - gitsigns recommended keymaps (hunk nav, stage, blame, diff)
+- `indent_line.lua` - indent-blankline.nvim
+- `lint.lua` - nvim-lint (markdownlint)
+- `oil.lua` - oil.nvim file browser (`\` keymap)
+- `trouble.lua` - trouble.nvim (diagnostics/symbols/LSP results list)
+- `ts_comments.lua` - ts-comments.nvim (treesitter-aware `commentstring`)
 
 ### Adding a New Plugin
 1. For built-in package manager: add `vim.pack.add { gh 'user/repo' }` in the appropriate section of `init.lua`, then `require` and `.setup{}`
 2. For standalone plugin files: create `lua/plugins/your-plugin.lua` with `vim.pack.add` + setup, then add `require 'plugins.your-plugin'` to Section 10 of `init.lua`
 
 ### LSP Configuration
-Uses `vim.lsp.config()` + `vim.lsp.enable()` (nvim 0.11+ API). Servers configured: `vtsls`, `stylua`, `terraformls`, `lua_ls`. Mason auto-installs them. LSP keymaps use `gr` prefix:
+Uses `vim.lsp.config()` + `vim.lsp.enable()` (nvim 0.11+ API). Servers configured: `vtsls`, `rust_analyzer`, `stylua`, `terraformls`, `lua_ls`. Mason auto-installs them. LSP keymaps use `gr` prefix:
 - `grn` rename, `gra` code action, `grd` definition, `grD` declaration
 - `grr` references, `gri` implementation, `grt` type definition, `gO` document symbols, `gW` workspace symbols
 - `<leader>th` toggle inlay hints
@@ -137,7 +143,6 @@ Uses nvim-dap with Go (delve) support. Keymaps: `<F5>` continue, `<F1>` step in,
 - `<leader>q` diagnostic quickfix
 - `<leader>f` format buffer
 - `<leader>u` toggle undotree
-- `<leader>lg` open lazygit in a tmux popup
 - `<leader>hs` stage hunk, `<leader>hr` reset hunk, `<leader>hp` preview hunk, `<leader>hi` preview hunk inline
 - `<leader>hb` blame line (full), `<leader>hd` diff vs index, `<leader>hD` diff vs last commit
 - `<leader>hQ`/`<leader>hq` set quickfix list from hunks, `<leader>tb`/`<leader>tw` toggle blame line/word diff
@@ -149,36 +154,33 @@ Uses nvim-dap with Go (delve) support. Keymaps: `<F5>` continue, `<F1>` step in,
 - Plugin files use the same 2-space style
 
 ## Ghostty Terminal
-Uses JetBrains Mono font at 16pt, tokyonight theme, block cursor with blink, zsh shell integration. Custom cursor GLSL shader in `cursor.glsl`.
+Uses JetBrains Mono font at 18pt, Rose Pine theme with 75% background opacity and blur, block cursor with blink, zsh shell integration. Custom cursor GLSL shader in `cursor.glsl`.
 
-## tmux Configuration
-- Uses TPM (Tmux Plugin Manager) with tokyonight theme, tmux-resurrect, tmux-sensible
-- `xterm-ghostty` terminal type with truecolor
-- Seamless pane navigation between nvim and tmux via `<C-hjkl>` (checks if vim is active)
-- Pane resizing with `<M-hjkl>` (Alt)
-- Resurrect preserves nvim sessions
-- New splits/windows inherit current pane's working directory
+## herdr (Multiplexer)
+herdr replaces tmux (installed via `Brewfile`). Config in `home/.config/herdr/config.toml`: rose-pine theme with transparent sidebar/panel/surface backgrounds to match Ghostty's translucency. herdr writes its runtime files (logs, sockets, `session.json`) into `~/.config/herdr/` next to the symlinked `config.toml`; those are not part of this repo.
 
 ## Zsh Configuration
-- No plugin framework — `.zshrc` manually sources `.config/zsh/*.zsh` and clones of `zsh-autosuggestions`/`zsh-syntax-highlighting` (installed by `install.sh`)
+- No plugin framework - `.zshrc` sets up Homebrew's shellenv, then sources the Homebrew-installed `zsh-autosuggestions` and `zsh-syntax-highlighting` from `$HOMEBREW_PREFIX/share/`. Syntax highlighting must stay at the very end of `.zshrc`
 - Prompt: Starship
 - Tool init: zoxide, atuin (with `^[[A` bound to atuin's full-screen up-search), fzf
 
-## Codex Configuration
-- `codex/AGENTS.md` is a Stow package that links to `~/AGENTS.md` and holds broad, home-directory guidance.
-- This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository and takes precedence when Codex works here.
+## pi Configuration
+- `home/.pi/agent/settings.json` sets the default provider/model, loads the `pi-subagent` notify extension, and tweaks UI (quiet startup, hidden thinking blocks, collapsed changelog). pi rewrites this file itself (e.g. `lastChangelogVersion`), so expect incidental diffs.
+- `home/.pi/agent/skills/` holds custom skills: `brave-search`, `browser-tools`, `pi-subagent`, `receiving-code-review`, `requesting-code-review`, `reviewing-github-prs`, `skill-creator`, `trim-docs`, `trim-tests`.
+- `home/AGENTS.md` links to `~/AGENTS.md` and holds broad, home-directory agent guidance. This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository.
 
 ## Gotchas
 
-1. **Leader must be set before plugins load** — `init.lua` sets leader at the very top before any `vim.pack.add`
-2. **vim.pack, not lazy.nvim** — the config uses nvim 0.12's built-in `vim.pack.add()` for package management. No lazy.nvim, no packer.
-3. **Oil.nvim is not lazy loaded** — loaded immediately via `require 'plugins.oil'` in Section 10
-4. **Format-on-save is disabled** — conform has an empty `enabled_filetypes` table; format manually with `<leader>f` or enable specific filetypes
-5. **Telescope shows hidden files** — `find_files` and ripgrep both have `--hidden` flag enabled
-6. **Stow uses directory structure** — each package mirrors its target under `$HOME`; `codex/AGENTS.md`, for example, is stowed as `~/AGENTS.md`
-7. **Blink.cmp uses Lua fuzzy matcher** — rust implementation is available but opted for Lua (`fuzzy.implementation = "lua"`)
-8. **No swap files** — `vim.o.swapfile = false` is set globally
-9. **nvim-treesitter uses `main` branch** — the rewrite for nvim 0.12+. Requires `tree-sitter-cli` to compile parsers from source
-10. **nvim-treesitter skips bundled parsers** — nvim 0.12 ships its own parsers for `lua`, `c`, `vim`, `vimdoc`, `markdown`, `markdown_inline`, `query`. The config only installs additional parsers (bash, diff, html, etc.)
-11. **Built-in commenting** — nvim 0.10+ has `gc`/`gcc`, with `commentstring` made treesitter-aware by ts-comments.nvim (no Comment.nvim plugin needed)
-12. **Diagnostics auto-open float** — `jump = { on_jump = ... }` in diagnostic config opens a float window when navigating diagnostics
+1. **Leader must be set before plugins load** - `init.lua` sets leader at the very top before any `vim.pack.add`
+2. **vim.pack, not lazy.nvim** - the config uses nvim 0.12's built-in `vim.pack.add()` for package management. No lazy.nvim, no packer.
+3. **Oil.nvim is not lazy loaded** - loaded immediately via `require 'plugins.oil'` in Section 10
+4. **Format-on-save is disabled** - conform has an empty `enabled_filetypes` table; format manually with `<leader>f` or enable specific filetypes
+5. **Telescope shows hidden files** - `find_files` and ripgrep both have `--hidden` flag enabled
+6. **Single Stow package** - everything lives under `home/`, mirroring its target under `$HOME`; `home/AGENTS.md`, for example, is stowed as `~/AGENTS.md`. Don't create new top-level package directories
+13. **Stow folds missing directories** - if a target dir like `~/.pi` doesn't exist, Stow symlinks the whole dir into the repo, and the app's runtime files (auth, sessions, logs) end up in git. `RUNTIME_DIRS` in `install.sh` pre-creates these; add to it when adding config for an app that writes next to its config file
+7. **Blink.cmp uses Lua fuzzy matcher** - rust implementation is available but opted for Lua (`fuzzy.implementation = "lua"`)
+8. **No swap files** - `vim.o.swapfile = false` is set globally
+9. **nvim-treesitter uses `main` branch** - the rewrite for nvim 0.12+. Requires `tree-sitter-cli` to compile parsers from source
+10. **nvim-treesitter skips bundled parsers** - nvim 0.12 ships its own parsers for `lua`, `c`, `vim`, `vimdoc`, `markdown`, `markdown_inline`, `query`. The config only installs additional parsers (bash, diff, html, etc.)
+11. **Built-in commenting** - nvim 0.10+ has `gc`/`gcc`, with `commentstring` made treesitter-aware by ts-comments.nvim (no Comment.nvim plugin needed)
+12. **Diagnostics auto-open float** - `jump = { on_jump = ... }` in diagnostic config opens a float window when navigating diagnostics

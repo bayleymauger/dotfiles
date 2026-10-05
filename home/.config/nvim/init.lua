@@ -69,12 +69,6 @@ do
   vim.keymap.set('n', '<C-j>', '<C-w><C-j>', { desc = 'Move focus to the lower window' })
   vim.keymap.set('n', '<C-k>', '<C-w><C-k>', { desc = 'Move focus to the upper window' })
   vim.keymap.set('n', '<leader>td', function() vim.diagnostic.enable(not vim.diagnostic.is_enabled()) end, { desc = 'Toggle diagnostics' })
-  vim.keymap.set(
-    'n',
-    '<leader>lg',
-    '<cmd>!tmux display-popup -E -w 90\\% -h 90\\% -d ' .. vim.fn.shellescape(vim.fn.getcwd()) .. ' -- lazygit <CR><CR>',
-    { desc = 'Toggle lazygit' }
-  )
 
   vim.api.nvim_create_autocmd('TextYankPost', {
     desc = 'Highlight when yanking (copying) text',
@@ -132,7 +126,6 @@ do
         vim.cmd 'TSUpdate'
         return
       end
-
     end,
   })
 end
@@ -175,15 +168,18 @@ do
     },
   }
 
-  vim.pack.add { gh 'folke/tokyonight.nvim' }
-  ---@diagnostic disable-next-line: missing-fields
-  require('tokyonight').setup {
-    styles = {
-      comments = { italic = false }, -- Disable italics in comments
+  vim.pack.add {
+    {
+      src = 'https://github.com/rose-pine/neovim',
+      name = 'rose-pine',
     },
   }
-
-  vim.cmd.colorscheme 'tokyonight-night'
+  require('rose-pine').setup {
+    styles = {
+      transparency = true,
+    },
+  }
+  vim.cmd 'colorscheme rose-pine'
 
   vim.pack.add { gh 'folke/todo-comments.nvim' }
   require('todo-comments').setup { signs = false }
@@ -574,6 +570,5 @@ do
   require 'plugins.ts_comments'
   require 'plugins.trouble'
   require 'plugins.gitsigns' -- adds gitsigns recommended keymaps
-  require 'plugins.tmux'
   require 'plugins.oil'
 end

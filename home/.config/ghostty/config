@@ -25,7 +25,10 @@ scrollback-limit = 1000000
 
 font-family = JetBrains Mono
 font-size = 18
-theme = TokyoNight
+theme = Rose Pine
 bold-color = #aaaaaa
+background-opacity = 0.75
+background-opacity-cells = true
+background-blur = true
 
 custom-shader = ~/.config/ghostty/cursor.glsl
