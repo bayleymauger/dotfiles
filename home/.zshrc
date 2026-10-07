@@ -43,8 +43,13 @@ bindkey '^[[A' atuin-up-search
 
 # --- Environment Variables ---
 export HOMEBREW_EDITOR=nvim
+# lazygit defaults to ~/Library/Application Support on macOS; point it at the stowed config
+export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
 
 # --- Syntax Highlighting ---
 # Must be sourced last so it can wrap every widget defined above.
 source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
 
+ export NVM_DIR="$HOME/.nvm"
+  [ -s "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/nvm.sh"  # This loads nvm
+  [ -s "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm" ] && \. "/home/linuxbrew/.linuxbrew/opt/nvm/etc/bash_completion.d/nvm"  # This loads nvm bash_completion

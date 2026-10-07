@@ -205,10 +205,12 @@ STOW_PACKAGE=home
 # Directories that must exist as real directories before stowing. Stow
 # "folds" a missing target directory into a single symlink pointing at the
 # repo, so anything an app writes there (pi's auth.json and sessions, herdr's
-# logs and sockets, every other app's ~/.config dir) would land in the repo.
+# logs and sockets, lazygit's state.yml, every other app's ~/.config dir)
+# would land in the repo.
 RUNTIME_DIRS=(
   "$HOME/.config"
   "$HOME/.config/herdr"
+  "$HOME/.config/lazygit"
   "$HOME/.pi"
   "$HOME/.pi/agent"
 )

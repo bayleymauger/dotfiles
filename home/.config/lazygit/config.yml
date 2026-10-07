@@ -1,0 +1,4 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/jesseduffield/lazygit/master/schema/config.json
+os:
+  # Open files (e / o) in Neovim, jumping to the selected line where possible.
+  editPreset: "nvim"
