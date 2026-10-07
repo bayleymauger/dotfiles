@@ -1,6 +1,7 @@
 {
   "defaultProvider": "anthropic",
   "defaultModel": "claude-opus-5-5",
+  "defaultThinkingLevel": "high",
   "defaultTools": [
     "+codemode"
   ],
@@ -12,11 +13,9 @@
   "steeringMode": "all",
   "followUpMode": "all",
   "collapseChangelog": true,
-  "lastChangelogVersion": "1.0.4",
+  "lastChangelogVersion": "1.1.0",
   "theme": "rosepine",
   "packages": [
     "npm:pi-herdsman"
-  ],
-  "lastChangelogVersion": "1.0.2",
-  "theme": "system"
+  ]
 }
