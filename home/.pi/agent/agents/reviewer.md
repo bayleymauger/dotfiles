@@ -1,5 +1,5 @@
 ---
 name: reviewer
-model: openai-codex/gpt-6-astra
+model: anthropic/claude-fable-5-1
 thinking: high
 ---

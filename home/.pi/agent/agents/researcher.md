@@ -1,5 +1,5 @@
 ---
 name: researcher
-model: openai-codex/gpt-6.1-sol
+model: anthropic/claude-opus-5-5
 thinking: medium
 ---
