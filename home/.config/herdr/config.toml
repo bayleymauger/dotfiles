@@ -6,6 +6,12 @@ default_shell = "/bin/zsh"
 [keys]
 focus_agent = "prefix+alt+1..9"
 
+# Toggle the herdr-reviewr code-review pane (persiyanov/herdr-reviewr)
+[[keys.command]]
+key = "cmd+r"
+type = "plugin_action"
+command = "persiyanov.reviewr.toggle"
+
 [theme]
 name = "rose-pine"
 
