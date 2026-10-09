@@ -2,7 +2,7 @@
 
 ## Overview
 
-This is a personal dotfiles repository using **GNU Stow** to symlink configuration files into `$HOME`. It is not a software project - there is no build, test, or deploy pipeline. The repository manages configuration for: Neovim (Lua-based, nvim 0.12+), Zsh, Ghostty terminal, herdr (terminal multiplexer), lazygit, and the pi coding agent (settings + custom skills).
+This is a personal dotfiles repository using **GNU Stow** to symlink configuration files into `$HOME`. It is not a software project - there is no build, test, or deploy pipeline. The repository manages configuration for: Neovim (Lua-based, nvim 0.12+), Zsh, Ghostty terminal, lazygit, and OpenCode.
 
 ## Repository Structure
 
@@ -19,17 +19,14 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
 └── home/                       # The single Stow package
     ├── AGENTS.md               # Linked to ~/AGENTS.md (global agent instructions)
     ├── .zshrc                  # Zsh config (aliases, tool init, plugin sourcing)
-    ├── .pi/agent/
-    │   ├── settings.json       # pi settings (default model, extensions, UI)
-    │   └── skills/             # Custom pi skills (brave-search, browser-tools, pi-subagent, ...)
     └── .config/
         ├── ghostty/            # Ghostty terminal config + cursor shader
         │   ├── config
         │   └── cursor.glsl
-        ├── herdr/
-        │   └── config.toml     # herdr multiplexer config (rose-pine, transparent panels)
         ├── lazygit/
         │   └── config.yml      # lazygit config (nvim edit preset)
+        ├── opencode/
+        │   └── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off)
         └── nvim/               # Neovim config (vim.pack, built-in package manager)
             ├── init.lua        # Single-file config: options, keymaps, plugins, LSP
             ├── stylua.toml
@@ -55,7 +52,7 @@ git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
-The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font (only when a GUI is detected - headless SSH servers skip it; override with `INSTALL_NERD_FONT=1`/`0`), the pi coding agent (via `curl -fsSL https://pi.dev/install.sh | sh`, not Homebrew; its bin dir `~/.pi/agent/bin` is added to PATH in `.zshrc`), stows `home/`, installs the `xterm-ghostty` terminfo entry, points `core.hooksPath` at `git-hooks/` (gitleaks pre-push scan), and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew (no nvm); there is no Python version manager.
+The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font (only when a GUI is detected - headless SSH servers skip it; override with `INSTALL_NERD_FONT=1`/`0`), stows `home/`, installs the `xterm-ghostty` terminfo entry, points `core.hooksPath` at `git-hooks/` (gitleaks pre-push scan), and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew (no nvm); there is no Python version manager.
 
 ### Stow Management
 ```bash
@@ -159,20 +156,18 @@ Uses nvim-dap with Go (delve) support. Keymaps: `<F5>` continue, `<F1>` step in,
 ## Ghostty Terminal
 Uses JetBrains Mono font at 18pt, Rose Pine theme with 75% background opacity and blur, block cursor with blink, zsh shell integration. Custom cursor GLSL shader in `cursor.glsl`.
 
-## herdr (Multiplexer)
-herdr replaces tmux (installed via `Brewfile`). Config in `home/.config/herdr/config.toml`: rose-pine theme with transparent sidebar/panel/surface backgrounds to match Ghostty's translucency. herdr writes its runtime files (logs, sockets, `session.json`) into `~/.config/herdr/` next to the symlinked `config.toml`; those are not part of this repo. When attaching with `herdr --remote`, keybindings come from the *local* machine's config (`--remote-keybindings local` is the default), so key changes must be pulled and stowed on the client machine.
-
 ## lazygit
 Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` exports `LG_CONFIG_FILE` so macOS uses it too (lazygit otherwise reads `~/Library/Application Support/lazygit`). lazygit writes `state.yml` next to the config, hence its entry in `RUNTIME_DIRS`.
+
+## OpenCode
+Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. The Anthropic `anthropic-workspace-id` header reads `{env:ANTHROPIC_WORKSPACE_ID}`, which is set per machine in an untracked `~/.zshenv`. OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
 
 ## Zsh Configuration
 - No plugin framework - `.zshrc` sets up Homebrew's shellenv, then sources the Homebrew-installed `zsh-autosuggestions` and `zsh-syntax-highlighting` from `$HOMEBREW_PREFIX/share/`. Syntax highlighting must stay at the very end of `.zshrc`
 - Prompt: Starship
 - Tool init: zoxide, atuin (with `^[[A` bound to atuin's full-screen up-search), fzf
 
-## pi Configuration
-- `home/.pi/agent/settings.json` sets the default provider/model, loads the `pi-subagent` notify extension, and tweaks UI (quiet startup, hidden thinking blocks, collapsed changelog). pi rewrites this file itself (e.g. `lastChangelogVersion`), so expect incidental diffs.
-- `home/.pi/agent/skills/` holds custom skills: `brave-search`, `browser-tools`, `pi-subagent`, `receiving-code-review`, `requesting-code-review`, `reviewing-github-prs`, `skill-creator`, `trim-docs`, `trim-tests`.
+## Global Agent Instructions
 - `home/AGENTS.md` links to `~/AGENTS.md` and holds broad, home-directory agent guidance. This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository.
 
 ## Gotchas
@@ -183,7 +178,7 @@ Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` ex
 4. **Format-on-save is disabled** - conform has an empty `enabled_filetypes` table; format manually with `<leader>f` or enable specific filetypes
 5. **Telescope shows hidden files** - `find_files` and ripgrep both have `--hidden` flag enabled
 6. **Single Stow package** - everything lives under `home/`, mirroring its target under `$HOME`; `home/AGENTS.md`, for example, is stowed as `~/AGENTS.md`. Don't create new top-level package directories
-13. **Stow folds missing directories** - if a target dir like `~/.pi` doesn't exist, Stow symlinks the whole dir into the repo, and the app's runtime files (auth, sessions, logs) end up in git. `RUNTIME_DIRS` in `install.sh` pre-creates these; add to it when adding config for an app that writes next to its config file
+13. **Stow folds missing directories** - if a target dir like `~/.config/lazygit` doesn't exist, Stow symlinks the whole dir into the repo, and the app's runtime files (e.g. `state.yml`) end up in git. `RUNTIME_DIRS` in `install.sh` pre-creates these; add to it when adding config for an app that writes next to its config file
 7. **Blink.cmp uses Lua fuzzy matcher** - rust implementation is available but opted for Lua (`fuzzy.implementation = "lua"`)
 8. **No swap files** - `vim.o.swapfile = false` is set globally
 9. **nvim-treesitter uses `main` branch** - the rewrite for nvim 0.12+. Requires `tree-sitter-cli` to compile parsers from source

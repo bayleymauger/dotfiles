@@ -169,30 +169,6 @@ install_nerd_font() {
   success "JetBrains Mono Nerd Font installed"
 }
 
-# Where pi's official installer puts the `pi` binary. Keep in sync with the
-# PATH entry in home/.zshrc.
-PI_BIN_DIR="$HOME/.pi/agent/bin"
-
-install_pi() {
-  # Put PI_BIN_DIR on PATH first: the installer then uses it as its bin dir
-  # and sees pi is already reachable, so it doesn't offer to append a PATH
-  # line to ~/.zshrc (which is a symlink into this repo).
-  export PATH="$PI_BIN_DIR:$PATH"
-
-  if command_exists pi; then
-    info "pi already installed (update with pi's self-update)"
-    return
-  fi
-
-  info "Installing pi coding agent..."
-  # Runs after the Brewfile so the installer finds Homebrew's node/npm.
-  if curl -fsSL https://pi.dev/install.sh | sh; then
-    success "pi installed"
-  else
-    warn "pi install failed - re-run: curl -fsSL https://pi.dev/install.sh | sh"
-  fi
-}
-
 # ---------------------------------------------------------------------------
 # Stow
 # ---------------------------------------------------------------------------
@@ -204,15 +180,13 @@ STOW_PACKAGE=home
 
 # Directories that must exist as real directories before stowing. Stow
 # "folds" a missing target directory into a single symlink pointing at the
-# repo, so anything an app writes there (pi's auth.json and sessions, herdr's
-# logs and sockets, lazygit's state.yml, every other app's ~/.config dir)
-# would land in the repo.
+# repo, so anything an app writes there (lazygit's state.yml, opencode's
+# plugins and service state, every other app's ~/.config dir) would land in
+# the repo.
 RUNTIME_DIRS=(
   "$HOME/.config"
-  "$HOME/.config/herdr"
   "$HOME/.config/lazygit"
-  "$HOME/.pi"
-  "$HOME/.pi/agent"
+  "$HOME/.config/opencode"
 )
 
 stow_packages() {
@@ -305,7 +279,6 @@ main() {
     install_packages_linux
   fi
   install_nerd_font
-  install_pi
 
   echo ""
   info "=== Stowing dotfiles ==="

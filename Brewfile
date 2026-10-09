@@ -15,8 +15,9 @@ cask "ghostty"
 # Editor
 brew "neovim"
 
-# Multiplexer
-brew "herdr"
+# Coding agents
+tap "anomalyco/tap"
+brew "anomalyco/tap/opencode"
 
 # Dev tools
 brew "tree-sitter"
