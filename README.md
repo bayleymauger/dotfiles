@@ -73,6 +73,7 @@ Hidden from the model. Load one with `@<skill>` in a prompt.
 | `@blast-radius` | What could this change break outside the diff. Proves the key safety fact by running real code. |
 | `@interrogate` | Adversarial multi-model review of a diff. Uses the newest Anthropic Opus and OpenAI Sol, then gives one verdict. Never edits code. |
 | `@cross-examine` | Respond to review feedback on your PR. Checks each comment against the code, then fixes it with proof, dismisses it with a reason, or asks you. Shows you every commit and reply before pushing or posting. |
+| `@no-comments` | Strip comments from a diff. A subagent deletes every comment except license headers, public API docs and constraints from code we can't change, and flags the code each workaround comment was excusing. Then it fixes that code. |
 | `@bro` | Restate the last answer in plain language, no jargon. |
 
 ### Auto-invoked
