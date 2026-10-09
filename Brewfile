@@ -16,8 +16,7 @@ cask "ghostty"
 brew "neovim"
 
 # Coding agents
-tap "anomalyco/tap"
-brew "anomalyco/tap/opencode"
+brew "anomalyco/tap/opencode-v2"
 
 # Dev tools
 brew "tree-sitter"
