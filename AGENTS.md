@@ -25,6 +25,7 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
         ├── lazygit/
         │   └── config.yml      # lazygit config (nvim edit preset)
         ├── opencode/
+        │   ├── AGENTS.md       # Global OpenCode instructions (writing rules), loaded in every session
         │   ├── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off, Glean + Playwright MCP)
         │   └── skills/         # Global OpenCode skills
         └── nvim/               # Neovim config (vim.pack, built-in package manager)
@@ -162,11 +163,13 @@ Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` ex
 ## OpenCode
 Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. Per-machine values are read via `{env:...}` from an untracked `~/.zshenv`: `ANTHROPIC_WORKSPACE_ID` (Anthropic `anthropic-workspace-id` header) and `GLEAN_MCP_URL` (Glean MCP server URL). OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
 
+`home/.config/opencode/AGENTS.md` is the only instruction file OpenCode loads into every session, subagents included (V2 accepts but ignores the `instructions` config field). It holds the writing rules. The `unslop` skill is a hidden pointer to them, kept so skills that say "write through unslop" still resolve. Edit the rules in `AGENTS.md`, not the skill.
+
 ## OpenCode Skills
 Global skills live in `home/.config/opencode/skills/<id>/SKILL.md` (stowed to `~/.config/opencode/skills/`). The README lists them.
 
 - **IDs** - the directory name is the skill ID (the frontmatter `name` is only a label). Refer to other skills by exact ID, e.g. `principle-type-system-discipline`, never shorthand.
-- **Invocation** - `disable-model-invocation: true` hides a skill from the model; the user loads it with `@id`. Heavy multi-agent skills (`how`, `why`, `teach`, `blast-radius`, `interrogate`), `cross-examine` (pushes and posts PR replies) and `bro` keep it. The rest are auto-invokable.
+- **Invocation** - `disable-model-invocation: true` hides a skill from the model; the user loads it with `@id`. Heavy multi-agent skills (`how`, `why`, `teach`, `blast-radius`, `interrogate`), `cross-examine` (pushes and posts PR replies), `bro`, and `unslop` (its rules are always on via the global `AGENTS.md`) keep it. The rest are auto-invokable.
 - **No Markdown at the `skills/` root** - OpenCode treats every root-level `.md` file as a skill. Docs go in the README.
 - **Stow folds `skills/`** - `~/.config/opencode/skills` is one symlink into the repo, so new skills need no restow. Running sessions pick up changes live.
 - **Subagents** - spawn with OpenCode's `subagent` tool: `agent: explore` for read-only codebase work, `agent: general` when MCP or broader tools are needed. Omit `model` so subagents inherit the session model.

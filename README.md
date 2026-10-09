@@ -79,7 +79,7 @@ Hidden from the model. Load one with `@<skill>` in a prompt.
 
 The model loads these when the task fits.
 
-- **Writing:** `unslop`, `technical-writing`
+- **Writing:** `technical-writing`
 - **Coding:** `typescript-best-practices`, `tdd`, `benchmark-checklist`
 - **Principles:** `principle-type-system-discipline`,
   `principle-boundary-discipline`, `principle-test-behavior-not-implementation`,
@@ -89,6 +89,13 @@ The model loads these when the task fits.
 
 To switch a skill between the two groups, add or remove
 `disable-model-invocation: true` in its `SKILL.md` frontmatter.
+
+### Always on
+
+The writing rules (no AI tells, plain words, no em dashes) live in
+`home/.config/opencode/AGENTS.md`, which OpenCode loads into every session.
+The `unslop` skill points to them so other skills can ask for a deliberate
+pass.
 
 ## Git Hooks
 
