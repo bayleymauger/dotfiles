@@ -67,6 +67,8 @@ Hidden from the model. Load one with `@<skill>` in a prompt.
 
 | Skill | Use it for |
 |-------|------------|
+| `@architect` | Design a new feature before coding it. Gets two independent design sketches from different model families (newest Opus and Sol), checks them against design red flags, merges the best into one, then builds it. Add "with checkpoint" to review the design first. |
+| `@prototype` | Settle one design decision with throwaway variants behind a switcher, such as a layout, interaction or approach. Shows screenshots or measurements and recommends one. |
 | `@how` | How does X work, or where should this code live. Explores with subagents and returns an architectural explanation. |
 | `@why` | Why is X built this way. Searches git, PRs and every connected MCP (e.g. Glean) and returns a cited answer with confidence levels. |
 | `@teach` | Help me understand X. Runs `how` and `why`, then explains it plainly at your pace. |
@@ -82,6 +84,9 @@ The model loads these when the task fits.
 
 - **Writing:** `technical-writing`
 - **Coding:** `typescript-best-practices`, `tdd`, `benchmark-checklist`
+- **Planning:** `principle-exhaust-the-design-space`,
+  `principle-foundational-thinking`, `principle-sequence-verifiable-units`,
+  `principle-redesign-from-first-principles`
 - **Principles:** `principle-type-system-discipline`,
   `principle-boundary-discipline`, `principle-test-behavior-not-implementation`,
   `principle-laziness-protocol`, `principle-subtract-before-you-add`,
