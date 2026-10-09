@@ -239,6 +239,54 @@ setup_git_hooks() {
 }
 
 # ---------------------------------------------------------------------------
+# Default shell
+# ---------------------------------------------------------------------------
+
+current_login_shell() {
+  if [ "$PLATFORM" = "macos" ]; then
+    dscl . -read "/Users/$USER" UserShell 2>/dev/null | awk '{print $2}'
+  else
+    getent passwd "$USER" | cut -d: -f7
+  fi
+}
+
+setup_default_shell() {
+  # Prefer the Homebrew zsh from the Brewfile; fall back to any zsh on PATH.
+  local zsh_path=""
+  if command_exists brew && [ -x "$(brew --prefix)/bin/zsh" ]; then
+    zsh_path="$(brew --prefix)/bin/zsh"
+  elif command_exists zsh; then
+    zsh_path="$(command -v zsh)"
+  else
+    warn "zsh not found - skipping default shell change"
+    return
+  fi
+
+  if [ "$(current_login_shell)" = "$zsh_path" ]; then
+    info "Default shell already $zsh_path"
+    return
+  fi
+
+  # chsh only accepts shells listed in /etc/shells.
+  if ! grep -qxF "$zsh_path" /etc/shells; then
+    info "Adding $zsh_path to /etc/shells..."
+    if ! echo "$zsh_path" | sudo tee -a /etc/shells >/dev/null; then
+      warn "Could not add $zsh_path to /etc/shells - skipping default shell change"
+      return
+    fi
+  fi
+
+  info "Changing default shell to $zsh_path..."
+  # Plain chsh prompts for the user's password, which some machines (e.g.
+  # SSO-only devboxes) don't have, so fall back to sudo.
+  if chsh -s "$zsh_path" || sudo chsh -s "$zsh_path" "$USER"; then
+    success "Default shell set to $zsh_path"
+  else
+    warn "Failed to change default shell - run: chsh -s $zsh_path"
+  fi
+}
+
+# ---------------------------------------------------------------------------
 # Neovim
 # ---------------------------------------------------------------------------
 
@@ -288,6 +336,7 @@ main() {
   info "=== Post-setup initialization ==="
   setup_terminfo
   setup_git_hooks
+  setup_default_shell
   setup_neovim
 
   echo ""
