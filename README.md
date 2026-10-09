@@ -69,7 +69,7 @@ Hidden from the model. Load one with `@<skill>` in a prompt.
 | Skill | Use it for |
 |-------|------------|
 | `@how` | How does X work, or where should this code live. Explores with subagents and returns an architectural explanation. |
-| `@why` | Why is X built this way. Searches git, PRs and every connected MCP (Glean, Slack, etc.) and returns a cited answer with confidence levels. |
+| `@why` | Why is X built this way. Searches git, PRs and every connected MCP (e.g. Glean) and returns a cited answer with confidence levels. |
 | `@teach` | Help me understand X. Runs `how` and `why`, then explains it plainly at your pace. |
 | `@blast-radius` | What could this change break outside the diff. Proves the key safety fact by running real code. |
 | `@interrogate` | Adversarial multi-model review of a diff. Uses the newest Anthropic Opus and OpenAI Sol, then gives one verdict. Never edits code. |

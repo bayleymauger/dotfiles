@@ -26,7 +26,7 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
         ├── lazygit/
         │   └── config.yml      # lazygit config (nvim edit preset)
         ├── opencode/
-        │   ├── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off, Glean + Slack + Playwright MCP)
+        │   ├── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off, Glean + Playwright MCP)
         │   └── skills/         # Global OpenCode skills
         └── nvim/               # Neovim config (vim.pack, built-in package manager)
             ├── init.lua        # Single-file config: options, keymaps, plugins, LSP
@@ -161,7 +161,7 @@ Uses JetBrains Mono font at 18pt, Rose Pine theme with 75% background opacity an
 Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` exports `LG_CONFIG_FILE` so macOS uses it too (lazygit otherwise reads `~/Library/Application Support/lazygit`). lazygit writes `state.yml` next to the config, hence its entry in `RUNTIME_DIRS`.
 
 ## OpenCode
-Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. Per-machine values are read via `{env:...}` from an untracked `~/.zshenv`: `ANTHROPIC_WORKSPACE_ID` (Anthropic `anthropic-workspace-id` header), `GLEAN_MCP_URL` (Glean MCP server URL) and `SLACK_MCP_CLIENT_ID` (Slack MCP OAuth client; Slack has no dynamic client registration). OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
+Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. Per-machine values are read via `{env:...}` from an untracked `~/.zshenv`: `ANTHROPIC_WORKSPACE_ID` (Anthropic `anthropic-workspace-id` header) and `GLEAN_MCP_URL` (Glean MCP server URL). OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
 
 ## OpenCode Skills
 Global skills live in `home/.config/opencode/skills/<id>/SKILL.md` (stowed to `~/.config/opencode/skills/`). The README lists them.
