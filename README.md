@@ -34,7 +34,7 @@ To remove everything Stow has linked, run `./uninstall.sh` (or `stow -D -t ~ hom
 
 All configs live in a single Stow package, `home/`, whose contents mirror the
 paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
-`~/.config/nvim/init.lua` and `home/AGENTS.md` -> `~/AGENTS.md`.
+`~/.config/nvim/init.lua`.
 
 ## What's Configured
 
@@ -45,7 +45,6 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 | Ghostty | `home/.config/ghostty/` | JetBrains Mono, Rose Pine theme, translucent background, cursor shader |
 | OpenCode | `home/.config/opencode/opencode.json` | Sharing and snapshots off, allowlisted providers |
 | OpenCode skills | `home/.config/opencode/skills/` | Code understanding, review, writing and coding skills |
-| Agents | `home/AGENTS.md` | Global instructions for coding agents, linked to `~/AGENTS.md` |
 
 ### Shell Stack
 

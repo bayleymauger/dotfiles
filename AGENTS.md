@@ -17,7 +17,6 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
 ├── git-hooks/pre-push          # gitleaks secret scan on push (wired via core.hooksPath, not stowed)
 ├── README.md
 └── home/                       # The single Stow package
-    ├── AGENTS.md               # Linked to ~/AGENTS.md (global agent instructions)
     ├── .zshrc                  # Zsh config (aliases, tool init, plugin sourcing)
     └── .config/
         ├── ghostty/            # Ghostty terminal config + cursor shader
@@ -179,9 +178,6 @@ Global skills live in `home/.config/opencode/skills/<id>/SKILL.md` (stowed to `~
 - Prompt: Starship
 - Tool init: zoxide, atuin (with `^[[A` bound to atuin's full-screen up-search), fzf
 
-## Global Agent Instructions
-- `home/AGENTS.md` links to `~/AGENTS.md` and holds broad, home-directory agent guidance. This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository.
-
 ## Gotchas
 
 1. **Leader must be set before plugins load** - `init.lua` sets leader at the very top before any `vim.pack.add`
@@ -189,7 +185,7 @@ Global skills live in `home/.config/opencode/skills/<id>/SKILL.md` (stowed to `~
 3. **Oil.nvim is not lazy loaded** - loaded immediately via `require 'plugins.oil'` in Section 10
 4. **Format-on-save is disabled** - conform has an empty `enabled_filetypes` table; format manually with `<leader>f` or enable specific filetypes
 5. **Telescope shows hidden files** - `find_files` and ripgrep both have `--hidden` flag enabled
-6. **Single Stow package** - everything lives under `home/`, mirroring its target under `$HOME`; `home/AGENTS.md`, for example, is stowed as `~/AGENTS.md`. Don't create new top-level package directories
+6. **Single Stow package** - everything lives under `home/`, mirroring its target under `$HOME`; `home/.zshrc`, for example, is stowed as `~/.zshrc`. Don't create new top-level package directories
 13. **Stow folds missing directories** - if a target dir like `~/.config/lazygit` doesn't exist, Stow symlinks the whole dir into the repo, and the app's runtime files (e.g. `state.yml`) end up in git. `RUNTIME_DIRS` in `install.sh` pre-creates these; add to it when adding config for an app that writes next to its config file
 7. **Blink.cmp uses Lua fuzzy matcher** - rust implementation is available but opted for Lua (`fuzzy.implementation = "lua"`)
 8. **No swap files** - `vim.o.swapfile = false` is set globally
