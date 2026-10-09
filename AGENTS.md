@@ -26,7 +26,7 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
         ├── lazygit/
         │   └── config.yml      # lazygit config (nvim edit preset)
         ├── opencode/
-        │   └── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off)
+        │   └── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off, Glean + Slack + Playwright MCP)
         └── nvim/               # Neovim config (vim.pack, built-in package manager)
             ├── init.lua        # Single-file config: options, keymaps, plugins, LSP
             ├── stylua.toml
@@ -160,7 +160,7 @@ Uses JetBrains Mono font at 18pt, Rose Pine theme with 75% background opacity an
 Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` exports `LG_CONFIG_FILE` so macOS uses it too (lazygit otherwise reads `~/Library/Application Support/lazygit`). lazygit writes `state.yml` next to the config, hence its entry in `RUNTIME_DIRS`.
 
 ## OpenCode
-Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. The Anthropic `anthropic-workspace-id` header reads `{env:ANTHROPIC_WORKSPACE_ID}`, which is set per machine in an untracked `~/.zshenv`. OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
+Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. Per-machine values are read via `{env:...}` from an untracked `~/.zshenv`: `ANTHROPIC_WORKSPACE_ID` (Anthropic `anthropic-workspace-id` header), `GLEAN_MCP_URL` (Glean MCP server URL) and `SLACK_MCP_CLIENT_ID` (Slack MCP OAuth client; Slack has no dynamic client registration). OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
 
 ## Zsh Configuration
 - No plugin framework - `.zshrc` sets up Homebrew's shellenv, then sources the Homebrew-installed `zsh-autosuggestions` and `zsh-syntax-highlighting` from `$HOMEBREW_PREFIX/share/`. Syntax highlighting must stay at the very end of `.zshrc`
