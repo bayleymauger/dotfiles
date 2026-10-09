@@ -44,6 +44,7 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 | Zsh | `home/.zshrc` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `home/.config/ghostty/` | JetBrains Mono, Rose Pine theme, translucent background, cursor shader |
 | OpenCode | `home/.config/opencode/opencode.json` | Sharing and snapshots off, allowlisted providers |
+| OpenCode skills | `home/.config/opencode/skills/` | Code understanding, review, writing and coding skills |
 | Agents | `home/AGENTS.md` | Global instructions for coding agents, linked to `~/AGENTS.md` |
 
 ### Shell Stack
@@ -56,6 +57,39 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 - **bat** - modern `cat` replacement
 - **zsh-autosuggestions** - fish-like autosuggestions
 - **zsh-syntax-highlighting** - command syntax highlighting
+
+## OpenCode Skills
+
+Global skills in `home/.config/opencode/skills/`.
+
+### Invoke directly
+
+Hidden from the model. Load one with `@<skill>` in a prompt.
+
+| Skill | Use it for |
+|-------|------------|
+| `@how` | How does X work, or where should this code live. Explores with subagents and returns an architectural explanation. |
+| `@why` | Why is X built this way. Searches git, PRs and every connected MCP (Glean, Slack, etc.) and returns a cited answer with confidence levels. |
+| `@teach` | Help me understand X. Runs `how` and `why`, then explains it plainly at your pace. |
+| `@blast-radius` | What could this change break outside the diff. Proves the key safety fact by running real code. |
+| `@interrogate` | Adversarial multi-model review of a diff. Uses the newest Anthropic Opus and OpenAI Sol, then gives one verdict. Never edits code. |
+| `@cross-examine` | Respond to review feedback on your PR. Checks each comment against the code, then fixes it with proof, dismisses it with a reason, or asks you. Shows you every commit and reply before pushing or posting. |
+| `@bro` | Restate the last answer in plain language, no jargon. |
+
+### Auto-invoked
+
+The model loads these when the task fits.
+
+- **Writing:** `unslop`, `technical-writing`
+- **Coding:** `typescript-best-practices`, `tdd`, `benchmark-checklist`
+- **Principles:** `principle-type-system-discipline`,
+  `principle-boundary-discipline`, `principle-test-behavior-not-implementation`,
+  `principle-laziness-protocol`, `principle-subtract-before-you-add`,
+  `principle-minimize-reader-load`, `principle-model-the-domain`,
+  `principle-encode-lessons-in-structure`, `principle-explain-the-number`
+
+To switch a skill between the two groups, add or remove
+`disable-model-invocation: true` in its `SKILL.md` frontmatter.
 
 ## Git Hooks
 

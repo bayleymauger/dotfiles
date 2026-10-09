@@ -26,7 +26,8 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
         ├── lazygit/
         │   └── config.yml      # lazygit config (nvim edit preset)
         ├── opencode/
-        │   └── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off, Glean + Slack + Playwright MCP)
+        │   ├── opencode.json   # OpenCode config (provider allowlist, sharing/snapshots off, Glean + Slack + Playwright MCP)
+        │   └── skills/         # Global OpenCode skills
         └── nvim/               # Neovim config (vim.pack, built-in package manager)
             ├── init.lua        # Single-file config: options, keymaps, plugins, LSP
             ├── stylua.toml
@@ -161,6 +162,17 @@ Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` ex
 
 ## OpenCode
 Installed from the official `anomalyco/tap` (Brewfile). Config in `home/.config/opencode/opencode.json`. Per-machine values are read via `{env:...}` from an untracked `~/.zshenv`: `ANTHROPIC_WORKSPACE_ID` (Anthropic `anthropic-workspace-id` header), `GLEAN_MCP_URL` (Glean MCP server URL) and `SLACK_MCP_CLIENT_ID` (Slack MCP OAuth client; Slack has no dynamic client registration). OpenCode writes runtime files (plugins, service state) into `~/.config/opencode/`, hence its entry in `RUNTIME_DIRS`.
+
+## OpenCode Skills
+Global skills live in `home/.config/opencode/skills/<id>/SKILL.md` (stowed to `~/.config/opencode/skills/`). The README lists them.
+
+- **IDs** - the directory name is the skill ID (the frontmatter `name` is only a label). Refer to other skills by exact ID, e.g. `principle-type-system-discipline`, never shorthand.
+- **Invocation** - `disable-model-invocation: true` hides a skill from the model; the user loads it with `@id`. Heavy multi-agent skills (`how`, `why`, `teach`, `blast-radius`, `interrogate`), `cross-examine` (pushes and posts PR replies) and `bro` keep it. The rest are auto-invokable.
+- **No Markdown at the `skills/` root** - OpenCode treats every root-level `.md` file as a skill. Docs go in the README.
+- **Stow folds `skills/`** - `~/.config/opencode/skills` is one symlink into the repo, so new skills need no restow. Running sessions pick up changes live.
+- **Subagents** - spawn with OpenCode's `subagent` tool: `agent: explore` for read-only codebase work, `agent: general` when MCP or broader tools are needed. Omit `model` so subagents inherit the session model.
+- **Models** - never hardcode model versions. Where a skill needs specific models (e.g. `interrogate`'s model diversity), name a family and resolve the newest version with the `models` tool at run time.
+- **Verify** - `opencode api get /api/skill > /tmp/opencode/skills.json` and grep for the ID (piping the output directly truncates it).
 
 ## Zsh Configuration
 - No plugin framework - `.zshrc` sets up Homebrew's shellenv, then sources the Homebrew-installed `zsh-autosuggestions` and `zsh-syntax-highlighting` from `$HOMEBREW_PREFIX/share/`. Syntax highlighting must stay at the very end of `.zshrc`
