@@ -42,6 +42,8 @@ alias cd='z'
 bindkey '^[[A' atuin-up-search
 
 # --- Environment Variables ---
+export EDITOR=nvim
+export VISUAL=nvim
 export HOMEBREW_EDITOR=nvim
 # lazygit defaults to ~/Library/Application Support on macOS; point it at the stowed config
 export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"

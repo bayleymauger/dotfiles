@@ -172,6 +172,7 @@ Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` ex
 
 ## pi Configuration
 - `home/.pi/agent/settings.json` sets the default provider/model, loads the `pi-subagent` notify extension, and tweaks UI (quiet startup, hidden thinking blocks, collapsed changelog). pi rewrites this file itself (e.g. `lastChangelogVersion`), so expect incidental diffs.
+- `home/.pi/agent/mcp.json` lists MCP servers. Servers whose URL must stay out of the repo (e.g. Glean) are registered by an extension in `home/.pi/agent/extensions/` from an env var set in the untracked `~/.zshenv`.
 - `home/.pi/agent/skills/` holds custom skills: `brave-search`, `browser-tools`, `pi-subagent`, `receiving-code-review`, `requesting-code-review`, `reviewing-github-prs`, `skill-creator`, `trim-docs`, `trim-tests`.
 - `home/AGENTS.md` links to `~/AGENTS.md` and holds broad, home-directory agent guidance. This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository.
 

@@ -1,3 +1,6 @@
+# Taps
+tap "atlassian/acli"
+
 # Core
 brew "git"
 brew "stow"
@@ -25,6 +28,7 @@ brew "lazygit"
 brew "node"
 brew "gitleaks"
 brew "ripgrep"
+brew "atlassian/acli/acli"
 
 # Formatters
 brew "stylua"
