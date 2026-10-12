@@ -16,6 +16,7 @@
   "lastChangelogVersion": "1.1.0",
   "theme": "rosepine",
   "packages": [
-    "npm:pi-herdsman"
+    "npm:@casualjim/pi-pstack",
+    "npm:pi-herdr-agents"
   ]
 }
