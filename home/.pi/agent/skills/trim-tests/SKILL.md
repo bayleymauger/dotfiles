@@ -1,63 +1,53 @@
 ---
 name: trim-tests
-description: Trim low-value unit tests, keeping a small, focused suite of high-value ones that cut test execution time. Use when the user asks to trim, prune, slim down, de-bloat, dedupe, or clean up tests or specs, says tests are excessive, redundant, trivial, slow, or AI-generated ("tests for everything"), or wants a test cleanup pass over the current changes, a file, or a directory. Never removes tests that protect important behavior. Defaults to the current uncommitted changes when no scope is given.
+description: "Cut low-value tests until every remaining one would catch a bug someone cares about, without dropping any test that guards important behavior. Defaults to the current uncommitted changes. Use for 'trim the tests', 'too many tests', 'prune, dedupe, or slim down these specs', or a cleanup pass over AI-generated tests."
+disable-model-invocation: true
 ---
 
-# Trim Tests
+# Trim tests
 
-Cut tests until every remaining one earns its place. Each test costs execution time on every run, has to be maintained, and adds noise when it fails for reasons nobody cares about. A good test fails only when real behavior breaks, and fails loudly.
+Cut tests until each one left fails only when real behavior breaks. Every test costs run time and upkeep, so a test that catches nothing is pure cost.
 
-## The hard rule: never drop an important test
-
-Removing a test that guarded real behavior is far worse than keeping ten trivial ones, because the bug it would have caught ships silently. So:
-
-- If a test is important (see "What to keep"), it stays. Do not delete it, comment it out, or disable it with `skip`/`xfail`/`.only`/`xit`/`t.Skip()` or similar.
-- If you're unsure whether a test is important, keep it and mention it in the summary as a candidate for the user to decide.
-- Don't weaken a kept test (loosening assertions, removing edge cases that matter) to make it shorter or faster.
+Never drop a test that guards important behavior. Shipping the bug it would have caught costs more than keeping ten trivial tests.
 
 ## Scope
 
-Use the scope the user gives (files, directory, commit range). If none, use the current changes: `git diff HEAD` plus untracked files, restricted to test files. Stay within that scope, and only touch tests and test helpers/fixtures, never production code.
+Use the files, directory, or commit range the caller gives. Otherwise use `git diff HEAD` plus untracked files, limited to test files. Edit only tests, fixtures, and test helpers. Never touch production code.
 
-Before judging a test, read the code it exercises. Value depends on what the code does: a three-line test of a money-rounding function matters; a three-line test of a getter doesn't.
+## Keep
 
-## What to keep
+A test stays if it would catch a bug in any of these:
 
-Tests that would catch a bug someone would actually care about:
+- Auth, permissions, input validation at trust boundaries, injection, secrets.
+- Money, billing, quotas, and anything with legal or compliance weight.
+- Persistence, migrations, serialization formats, and anything that can lose or corrupt data.
+- A real past bug. Regression tests that cite an issue or incident always stay.
+- A public API or contract that other code or users depend on.
+- Branching, parsing, state machines, algorithms, date and timezone math, concurrency.
+- Error handling that prevents a silent failure.
+- The boundaries of that logic, like empty, zero, max, off by one, and invalid input.
 
-- Security and access control: auth, permissions, input validation at trust boundaries, injection, secrets handling
-- Money, billing, quotas, and anything with legal or compliance weight
-- Data integrity: persistence, migrations, serialization formats, anything that could lose or corrupt data
-- Regression tests for real bugs (especially ones referencing an issue or incident)
-- Public API and contract behavior other code or users depend on
-- Non-trivial logic: branching, parsing, state machines, algorithms, date/time and timezone math, concurrency
-- Error handling that prevents silent failure
-- Meaningful boundaries and edge cases (empty, zero, max, off-by-one, invalid input) for that logic
+## Cut
 
-## What to cut
+- Getters, setters, plain constructors, constants, and pass-through delegation.
+- Tests of the language, framework, or a library instead of this code.
+- Anything the type checker or linter already enforces.
+- Mock echoes, where the assertion checks that a mock received what the test just handed it.
+- Implementation-detail tests, like private call counts or internal ordering, when a behavior test already covers the outcome.
+- Duplicates that walk the same path with inputs that differ in no meaningful way. Keep one representative and the boundaries.
+- "Renders without crashing" smoke tests when other tests exercise the same code.
+- Snapshots of trivial or volatile output that nobody reviews.
 
-- Tests of trivial code: getters/setters, plain constructors, constants, simple pass-through or delegation
-- Tests of the language, framework, or a library rather than this code (e.g. that `JSON.stringify` works, that a dataclass stores fields)
-- Things the type system or a linter already enforces
-- Tests that only verify mocks: everything that matters is mocked and the assertion checks the mock was called with what the test just set up
-- Implementation-detail tests that break on harmless refactors (private call counts, internal ordering) while a behavior test already covers the outcome
-- Duplicates: several tests walking the same code path with inputs that differ in no meaningful way. Keep the representative and the boundaries.
-- "Renders/constructs without crashing" smoke tests when other tests already exercise the same thing
-- Snapshot tests of trivial or volatile output that nobody reviews
+## Steps
 
-## How to edit
+1. Run the scoped tests with the project's test command. Record the count and runtime. If any already fail, stop and report them.
+2. Read the code each test exercises before judging it. A three-line test of a rounding function matters. A three-line test of a getter does not.
+3. Sort every test into keep, cut, or unsure. Unsure stays and goes in the reply for the user to decide.
+4. Flag kept tests of important behavior that would still pass if every function they import returned `undefined`. The **principle-test-behavior-not-implementation** skill lists the shapes. Keep them and report them as weak. Do not rewrite them unasked.
+5. Delete whole cut tests. Merge near-duplicates into one test, or into a table-driven test if the file already uses that style, only when every meaningful case survives. Never skip, comment out, or `.only` a test instead of deleting it. Never loosen a kept test's assertions or drop its edge cases to shorten it.
+6. Delete the fixtures, helpers, mocks, and imports the cuts left unused. Delete a test file once nothing of value is left in it.
+7. Rerun the same command. Fix any failure in the trimming, never in production code.
 
-- Prefer deleting whole low-value tests. Merge near-duplicates into one test, or a parametrized/table-driven test if the project already uses that style, only when that keeps every meaningful case.
-- After removing tests, delete fixtures, helpers, mocks, and imports that are now unused. Remove a test file entirely if nothing of value is left in it.
-- Note slow tests (real sleeps, network, large fixtures) that you kept because they're important; suggest a faster approach in the summary instead of rewriting them unasked.
-- Don't add new tests or expand scope. If the suite is already lean, "no changes needed" is a valid outcome.
-- Run the affected tests afterwards with the project's existing test command and confirm they pass. If they fail, fix the trimming mistake, not the production code.
+Don't add tests or widen scope. A lean suite with no cuts is a valid result. For slow tests that stay, like real sleeps, network calls, or large fixtures, name a faster approach in the reply instead of rewriting them.
 
-## Summary
-
-Keep the reply brief:
-
-- Test count before → after (and runtime if cheaply measured)
-- Removed tests, grouped by file, each with a few-word reason (`trivial getter`, `duplicate of X`, `tests the mock`)
-- Borderline tests kept for the user to decide, and slow-but-important tests with a speed-up idea
-- Test run result
+**Reply:** test count and runtime before and after, cuts grouped by file with a few-word reason each (`trivial getter`, `duplicate of X`, `mock echo`), unsure and weak tests kept for the user, slow kept tests with a speed-up idea, and the final test run result.
