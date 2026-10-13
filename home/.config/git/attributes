@@ -1,0 +1,17 @@
+# Global git attributes (git reads ~/.config/git/attributes by default).
+# A repo's own .gitattributes and .git/info/attributes take precedence.
+
+# Generated lockfiles: skip text diffs so huge lockfile changes don't flood
+# (or freeze) `git diff`, `git log -p` and lazygit. Git reports
+# "Binary files ... differ" instead. Merging and staging are unaffected.
+# View the full diff on demand with: git diff --text -- <file>
+package-lock.json -diff
+npm-shrinkwrap.json -diff
+pnpm-lock.yaml -diff
+yarn.lock -diff
+bun.lock -diff
+Cargo.lock -diff
+Cargo.Bazel.lock -diff
+uv.lock -diff
+poetry.lock -diff
+go.sum -diff

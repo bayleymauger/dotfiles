@@ -28,6 +28,8 @@ Everything that gets symlinked lives in a single Stow package, `home/`, whose co
         │   └── cursor.glsl
         ├── herdr/
         │   └── config.toml     # herdr multiplexer config (rose-pine, transparent panels)
+        ├── git/
+        │   └── attributes      # Global gitattributes (lockfiles marked -diff)
         ├── lazygit/
         │   └── config.yml      # lazygit config (nvim edit preset)
         └── nvim/               # Neovim config (vim.pack, built-in package manager)
@@ -163,7 +165,7 @@ Uses JetBrains Mono font at 18pt, Rose Pine theme with 75% background opacity an
 herdr replaces tmux (installed via `Brewfile`). Config in `home/.config/herdr/config.toml`: rose-pine theme with transparent sidebar/panel/surface backgrounds to match Ghostty's translucency. herdr writes its runtime files (logs, sockets, `session.json`) into `~/.config/herdr/` next to the symlinked `config.toml`; those are not part of this repo.
 
 ## lazygit
-Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` exports `LG_CONFIG_FILE` so macOS uses it too (lazygit otherwise reads `~/Library/Application Support/lazygit`). lazygit writes `state.yml` next to the config, hence its entry in `RUNTIME_DIRS`.
+Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` exports `LG_CONFIG_FILE` so macOS uses it too (lazygit otherwise reads `~/Library/Application Support/lazygit`). lazygit writes `state.yml` next to the config, hence its entry in `RUNTIME_DIRS`. Large lockfile diffs are suppressed globally via `home/.config/git/attributes` (`-diff`), since lazygit has no diff size limit; view one with `git diff --text -- <file>`.
 
 ## Zsh Configuration
 - No plugin framework - `.zshrc` sets up Homebrew's shellenv, then sources the Homebrew-installed `zsh-autosuggestions` and `zsh-syntax-highlighting` from `$HOMEBREW_PREFIX/share/`. Syntax highlighting must stay at the very end of `.zshrc`

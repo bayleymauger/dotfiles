@@ -209,6 +209,7 @@ STOW_PACKAGE=home
 # would land in the repo.
 RUNTIME_DIRS=(
   "$HOME/.config"
+  "$HOME/.config/git"
   "$HOME/.config/herdr"
   "$HOME/.config/lazygit"
   "$HOME/.pi"
