@@ -28,7 +28,7 @@ brew "lazygit"
 brew "node"
 brew "gitleaks"
 brew "ripgrep"
-brew "atlassian/acli/acli"
+brew "atlassian/acli/acli", trusted: true
 
 # Formatters
 brew "stylua"
