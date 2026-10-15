@@ -176,6 +176,7 @@ Config in `home/.config/lazygit/config.yml` (`os.editPreset: nvim`). `.zshrc` ex
 - `home/.pi/agent/settings.json` sets the default provider/model, packages, and UI tweaks (quiet startup, hidden thinking blocks, collapsed changelog). It and `themes/rosepine.json` reference pi's published schemas (`https://pi.dev/schemas/*.schema.json`); pi validates themes at startup. pi rewrites this file itself (e.g. `lastChangelogVersion`), so expect incidental diffs.
 - `home/.pi/agent/mcp.json` lists MCP servers. Servers whose URL must stay out of the repo (e.g. Glean) are registered by an extension in `home/.pi/agent/extensions/` from an env var set in the untracked `~/.zshenv`.
 - `home/.pi/agent/skills/` holds custom skills: `brave-search`, `browser-tools`, `trim-tests`.
+- `home/.pi/agent/herdr-agents/config.json` is the pi-herdr-agents config, which pi-pstack also reads: subagent model routing via `models.default`/`agents`/`tasks`. It cannot set thinking levels; children inherit `defaultThinkingLevel` from `settings.json`. Keep `~/.pi/agent/herdr-agents` out of `RUNTIME_DIRS` so Stow folds it into a directory symlink. The writer (`/subagents-init`) replaces the file atomically with a rename, which would overwrite a per-file symlink. Its lock and temp files are gitignored.
 - `home/AGENTS.md` links to `~/AGENTS.md` and holds broad, home-directory agent guidance. This repository-root `AGENTS.md` is deliberately separate: it documents only this dotfiles repository.
 
 ## Gotchas

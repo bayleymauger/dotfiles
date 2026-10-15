@@ -1,1 +1,5 @@
 Brewfile.lock.json
+
+# pi-herdr-agents runtime files written next to its stowed config
+home/.pi/agent/herdr-agents/config.json.lock
+home/.pi/agent/herdr-agents/.*-config.tmp
