@@ -5,7 +5,7 @@ Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, Ghostty,
 ## Quick Start
 
 ```bash
-git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
+git clone --recurse-submodules https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
@@ -16,10 +16,11 @@ The script handles everything on **macOS** and **Linux**:
 2. Install all packages from `Brewfile` via Homebrew
 3. Install JetBrains Mono Nerd Font (only on GUI machines, skipped if already installed; force with `INSTALL_NERD_FONT=1` or skip with `=0`)
 4. Install the pi coding agent via its official installer (`curl -fsSL https://pi.dev/install.sh | sh`)
-5. Symlink dotfiles via Stow
-6. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
-7. Configure git hooks (gitleaks secret scanning on push)
-8. Install Neovim plugins
+5. Fetch the `vendor/pstack-claude` submodule and link its skills into `home/.agents/skills/`
+6. Symlink dotfiles via Stow
+7. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
+8. Configure git hooks (gitleaks secret scanning on push)
+9. Install Neovim plugins
 
 It's safe to re-run at any time.
 
@@ -46,6 +47,8 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 | Ghostty | `home/.config/ghostty/` | JetBrains Mono, Rose Pine theme, translucent background, cursor shader |
 | herdr | `home/.config/herdr/config.toml` | Terminal multiplexer, Rose Pine theme with transparent panels |
 | pi | `home/.pi/agent/` | Settings and custom skills for the pi coding agent |
+| OpenCode | `home/.config/opencode/` | Built-in Rosé Pine theme, default model, MCP servers |
+| Agent skills | `home/.agents/skills/` | [pstack](https://github.com/michael-denyer/pstack-claude) skills, linked from the `vendor/pstack-claude` submodule |
 | Agents | `home/AGENTS.md` | Global instructions for coding agents, linked to `~/AGENTS.md` |
 
 ### Shell Stack
@@ -85,6 +88,18 @@ If the app writes runtime files next to its config (logs, sessions,
 credentials), add its directory to `RUNTIME_DIRS` in `install.sh`. Otherwise,
 on a fresh machine, Stow links the whole directory into this repo and those
 files end up in git.
+
+## Updating pstack Skills
+
+```bash
+cd ~/dotfiles
+git submodule update --remote vendor/pstack-claude
+./install.sh
+```
+
+`install.sh` relinks `home/.agents/skills/` so it matches the submodule,
+adding new skills and pruning removed ones. Commit the submodule bump and any
+link changes together.
 
 ## Removing Dotfiles
 

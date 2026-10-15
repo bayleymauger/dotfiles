@@ -212,9 +212,45 @@ RUNTIME_DIRS=(
   "$HOME/.config/git"
   "$HOME/.config/herdr"
   "$HOME/.config/lazygit"
+  "$HOME/.config/opencode"
   "$HOME/.pi"
   "$HOME/.pi/agent"
+  "$HOME/.agents"
+  "$HOME/.agents/skills"
 )
+
+# pstack's skills live in the vendor/pstack-claude submodule. Each one gets a
+# relative symlink in home/.agents/skills/, which Stow then links into
+# ~/.agents/skills/ (read by OpenCode and other agents). Re-running this after
+# `git submodule update --remote` picks up added skills and prunes removed ones.
+PSTACK_SKILLS_DIR=vendor/pstack-claude/plugins/pstack/skills
+AGENT_SKILLS_DIR=home/.agents/skills
+
+link_pstack_skills() {
+  info "Linking pstack skills..."
+
+  cd "$DOTFILES_DIR"
+  if ! git submodule update --init vendor/pstack-claude; then
+    warn "Failed to fetch the pstack-claude submodule - skipping pstack skills"
+    return
+  fi
+
+  mkdir -p "$AGENT_SKILLS_DIR"
+
+  local link
+  for link in "$AGENT_SKILLS_DIR"/*; do
+    if [ -L "$link" ] && [ ! -e "$link" ]; then
+      rm "$link"
+    fi
+  done
+
+  local skill
+  for skill in "$PSTACK_SKILLS_DIR"/*/; do
+    skill="$(basename "$skill")"
+    ln -sfn "../../../$PSTACK_SKILLS_DIR/$skill" "$AGENT_SKILLS_DIR/$skill"
+  done
+  success "pstack skills linked"
+}
 
 stow_packages() {
   info "Symlinking dotfiles with Stow..."
@@ -358,6 +394,7 @@ main() {
 
   echo ""
   info "=== Stowing dotfiles ==="
+  link_pstack_skills
   stow_packages
 
   echo ""

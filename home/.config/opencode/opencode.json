@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "anthropic/claude-opus-5-5",
+  "agents": {
+    "build": { "model": "anthropic/claude-opus-5-5#high" },
+    "plan": { "model": "anthropic/claude-opus-5-5#high" }
+  },
+  "providers": {
+    "anthropic": {
+      "headers": {
+        "anthropic-workspace-id": "{env:ANTHROPIC_WORKSPACE_ID}"
+      }
+    }
+  },
+  "mcp": {
+    "servers": {
+      "canva": {
+        "type": "remote",
+        "url": "https://mcp.canva.com/mcp"
+      },
+      "glean": {
+        "type": "remote",
+        "url": "{env:GLEAN_MCP_URL}"
+      }
+    }
+  }
+}
