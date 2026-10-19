@@ -1,6 +1,6 @@
 # dotfiles
 
-Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, Ghostty, herdr, and the pi coding agent.
+Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, Ghostty, herdr, lazygit, and coding agents.
 
 ## Quick Start
 
@@ -15,12 +15,11 @@ The script handles everything on **macOS** and **Linux**:
 1. Install Homebrew (if not present)
 2. Install all packages from `Brewfile` via Homebrew
 3. Install JetBrains Mono Nerd Font (only on GUI machines, skipped if already installed; force with `INSTALL_NERD_FONT=1` or skip with `=0`)
-4. Install the pi coding agent via its official installer (`curl -fsSL https://pi.dev/install.sh | sh`)
-5. Fetch the `vendor/pstack-claude` submodule and link its skills into `home/.agents/skills/`
-6. Symlink dotfiles via Stow
-7. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
-8. Configure git hooks (gitleaks secret scanning on push)
-9. Install Neovim plugins
+4. Fetch the `vendor/pstack-claude` submodule and link its skills into `home/.agents/skills/`
+5. Symlink dotfiles via Stow
+6. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
+7. Configure git hooks (gitleaks secret scanning on push)
+8. Install Neovim plugins
 
 It's safe to re-run at any time.
 
@@ -46,7 +45,6 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 | Zsh | `home/.zshrc` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `home/.config/ghostty/` | JetBrains Mono, Rose Pine theme, translucent background, cursor shader |
 | herdr | `home/.config/herdr/config.toml` | Terminal multiplexer, Rose Pine theme with transparent panels |
-| pi | `home/.pi/agent/` | Settings and custom skills for the pi coding agent |
 | OpenCode | `home/.config/opencode/` | Built-in Rosé Pine theme, default model, MCP servers |
 | Agent skills | `home/.agents/skills/` | [pstack](https://github.com/michael-denyer/pstack-claude) skills, linked from the `vendor/pstack-claude` submodule |
 | Agents | `home/AGENTS.md` | Global instructions for coding agents, linked to `~/AGENTS.md` |

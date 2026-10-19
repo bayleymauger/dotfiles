@@ -7,13 +7,6 @@ elif [ -x /home/linuxbrew/.linuxbrew/bin/brew ]; then
   eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
 fi
 
-# --- pi ---
-# Installed by pi's official installer (see install.sh), not Homebrew.
-export PATH="$HOME/.pi/agent/bin:$PATH"
-# Send pi copies via OSC 52 too, so they reach the local clipboard from a
-# herdr --remote session (herdr server panes may lack the SSH env vars pi checks).
-export PI_CLIPBOARD_OSC52=1
-
 # --- Zsh Plugin Loading ---
 source "$HOMEBREW_PREFIX/share/zsh-autosuggestions/zsh-autosuggestions.zsh"
 
