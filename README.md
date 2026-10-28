@@ -1,11 +1,11 @@
 # dotfiles
 
-Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, Ghostty, herdr, lazygit, and coding agents.
+Personal dotfiles managed with GNU Stow. Configuration for Neovim, Zsh, Ghostty, lazygit, and coding agents.
 
 ## Quick Start
 
 ```bash
-git clone --recurse-submodules https://github.com/bayleymauger/dotfiles.git ~/dotfiles
+git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
@@ -15,10 +15,10 @@ The script handles everything on **macOS** and **Linux**:
 1. Install Homebrew (if not present)
 2. Install all packages from `Brewfile` via Homebrew
 3. Install JetBrains Mono Nerd Font (only on GUI machines, skipped if already installed; force with `INSTALL_NERD_FONT=1` or skip with `=0`)
-4. Fetch the `vendor/pstack-claude` submodule and link its skills into `home/.agents/skills/`
-5. Symlink dotfiles via Stow
-6. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
-7. Configure git hooks (gitleaks secret scanning on push)
+4. Symlink dotfiles via Stow
+5. Install the `xterm-ghostty` terminfo entry (so SSH sessions from Ghostty work)
+6. Configure git hooks (gitleaks secret scanning on push)
+7. Install [pstack](https://github.com/backnotprop/pstack) agent skills globally via `npx skills add`
 8. Install Neovim plugins
 
 It's safe to re-run at any time.
@@ -44,9 +44,7 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 | Neovim | `home/.config/nvim/` | Lua-based, built-in package manager (nvim 0.12+), Rose Pine theme |
 | Zsh | `home/.zshrc` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `home/.config/ghostty/` | JetBrains Mono, Rose Pine theme, translucent background, cursor shader |
-| herdr | `home/.config/herdr/config.toml` | Terminal multiplexer, Rose Pine theme with transparent panels |
 | OpenCode | `home/.config/opencode/` | Built-in Rosé Pine theme, default model, MCP servers |
-| Agent skills | `home/.agents/skills/` | [pstack](https://github.com/michael-denyer/pstack-claude) skills, linked from the `vendor/pstack-claude` submodule |
 | Agents | `home/AGENTS.md` | Global instructions for coding agents, linked to `~/AGENTS.md` |
 
 ### Shell Stack
@@ -91,13 +89,12 @@ files end up in git.
 
 ```bash
 cd ~/dotfiles
-git submodule update --remote vendor/pstack-claude
 ./install.sh
 ```
 
-`install.sh` relinks `home/.agents/skills/` so it matches the submodule,
-adding new skills and pruning removed ones. Commit the submodule bump and any
-link changes together.
+Re-running `install.sh` re-runs `npx skills add backnotprop/pstack -g`, which
+installs the latest skills into `~/.agents/skills/`. They are not tracked in
+this repo.
 
 ## Removing Dotfiles
 

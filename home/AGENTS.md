@@ -14,6 +14,33 @@
   If you see one, even if it is not caused by what you are working on right now, still get it fixed.
 - Before using "dynamic workflows", "ultra code" or any harness feature that immediately spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
 
+## Code spacing
+
+- Keep consecutive variable declarations together in one block with no blank lines between them
+- Put a blank line before and after logic blocks (`if`, loops, `switch`, `try`, and similar), unless the block is the first or last statement in its scope
+- A declaration that follows a logic block starts a new declaration block, separated by a blank line
+
+```ts
+function test() {
+  const a = 1;
+  const b = 2;
+
+  if (a > b) {
+    ...
+  }
+
+  for (const i of [1, 2, 3]) {
+    ...
+  }
+
+  const c = [1, 2, 3];
+
+  while (a < b) {
+    ...
+  }
+}
+```
+
 ## Maintaining this file
 
 Keep this file for knowledge useful to almost every future agent session in this project.

@@ -180,50 +180,30 @@ STOW_PACKAGE=home
 
 # Directories that must exist as real directories before stowing. Stow
 # "folds" a missing target directory into a single symlink pointing at the
-# repo, so anything an app writes there (herdr's logs and sockets,
-# lazygit's state.yml, every other app's ~/.config dir)
+# repo, so anything an app writes there (lazygit's state.yml, every other app's ~/.config dir)
 # would land in the repo.
 RUNTIME_DIRS=(
   "$HOME/.config"
   "$HOME/.config/git"
-  "$HOME/.config/herdr"
   "$HOME/.config/lazygit"
   "$HOME/.config/opencode"
-  "$HOME/.agents"
-  "$HOME/.agents/skills"
 )
 
-# pstack's skills live in the vendor/pstack-claude submodule. Each one gets a
-# relative symlink in home/.agents/skills/, which Stow then links into
-# ~/.agents/skills/ (read by OpenCode and other agents). Re-running this after
-# `git submodule update --remote` picks up added skills and prunes removed ones.
-PSTACK_SKILLS_DIR=vendor/pstack-claude/plugins/pstack/skills
-AGENT_SKILLS_DIR=home/.agents/skills
-
-link_pstack_skills() {
-  info "Linking pstack skills..."
-
-  cd "$DOTFILES_DIR"
-  if ! git submodule update --init vendor/pstack-claude; then
-    warn "Failed to fetch the pstack-claude submodule - skipping pstack skills"
+# pstack's agent skills are installed with the skills CLI. -g puts them in
+# ~/.agents/skills/ (read by OpenCode and other agents). Re-running updates
+# them to the latest version.
+install_pstack_skills() {
+  if ! command_exists npx; then
+    warn "npx not found - skipping pstack skills"
     return
   fi
 
-  mkdir -p "$AGENT_SKILLS_DIR"
-
-  local link
-  for link in "$AGENT_SKILLS_DIR"/*; do
-    if [ -L "$link" ] && [ ! -e "$link" ]; then
-      rm "$link"
-    fi
-  done
-
-  local skill
-  for skill in "$PSTACK_SKILLS_DIR"/*/; do
-    skill="$(basename "$skill")"
-    ln -sfn "../../../$PSTACK_SKILLS_DIR/$skill" "$AGENT_SKILLS_DIR/$skill"
-  done
-  success "pstack skills linked"
+  info "Installing pstack skills..."
+  if npx --yes skills add backnotprop/pstack -g -s '*' -y; then
+    success "pstack skills installed"
+  else
+    warn "pstack skills install failed - re-run ./install.sh to retry"
+  fi
 }
 
 stow_packages() {
@@ -367,13 +347,13 @@ main() {
 
   echo ""
   info "=== Stowing dotfiles ==="
-  link_pstack_skills
   stow_packages
 
   echo ""
   info "=== Post-setup initialization ==="
   setup_terminfo
   setup_git_hooks
+  install_pstack_skills
   setup_default_shell
   setup_neovim
 

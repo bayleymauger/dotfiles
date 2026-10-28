@@ -1,3 +1,0 @@
-[submodule "vendor/pstack-claude"]
-	path = vendor/pstack-claude
-	url = https://github.com/michael-denyer/pstack-claude
