@@ -18,9 +18,6 @@ cask "ghostty"
 # Editor
 brew "neovim"
 
-# Multiplexer
-brew "herdr"
-
 # Dev tools
 brew "tree-sitter"
 brew "tree-sitter-cli"

@@ -14,7 +14,7 @@ git clone https://github.com/bayleymauger/dotfiles.git ~/dotfiles
 cd ~/dotfiles
 ./install.sh
 ```
-The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font (only when a GUI is detected - headless SSH servers skip it; override with `INSTALL_NERD_FONT=1`/`0`), stows `home/`, installs the `xterm-ghostty` terminfo entry, points `core.hooksPath` at `git-hooks/` (gitleaks pre-push scan), installs the pstack agent skills, and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew (no nvm); there is no Python version manager.
+The script installs Homebrew and the `Brewfile` packages (on both macOS and Linux), the JetBrains Mono Nerd Font (only when a GUI is detected - headless SSH servers skip it; override with `INSTALL_NERD_FONT=1`/`0`), stows `home/`, installs the `xterm-ghostty` terminfo entry, points `core.hooksPath` at `git-hooks/` (gitleaks pre-push scan), installs the pstack agent skills, and installs Neovim plugins. It is idempotent - safe to re-run. Node.js comes straight from Homebrew; there is no Node version manager.
 
 ### Stow Management
 ```bash

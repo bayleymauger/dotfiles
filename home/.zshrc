@@ -47,6 +47,3 @@ export LG_CONFIG_FILE="$HOME/.config/lazygit/config.yml"
 # --- Syntax Highlighting ---
 # Must be sourced last so it can wrap every widget defined above.
 source "$HOMEBREW_PREFIX/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh"
-
-export NVM_DIR="$([ -z "${XDG_CONFIG_HOME-}" ] && printf %s "${HOME}/.nvm" || printf %s "${XDG_CONFIG_HOME}/nvm")"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh" # This loads nvm
