@@ -16,30 +16,14 @@
 
 ## Code spacing
 
-- Keep consecutive variable declarations together in one block with no blank lines between them
+Use blank lines to split code into logical steps, like paragraphs. Each group should read as one idea.
+
+- Keep statements that form one step together, even if they mix kinds (consecutive declarations, or a call plus the declaration that follows it, like invalidating a token then fetching a fresh one)
+- Separate distinct steps with a blank line
 - Put a blank line before and after logic blocks (`if`, loops, `switch`, `try`, and similar), unless the block is the first or last statement in its scope
-- A declaration that follows a logic block starts a new declaration block, separated by a blank line
-
-```ts
-function test() {
-  const a = 1;
-  const b = 2;
-
-  if (a > b) {
-    ...
-  }
-
-  for (const i of [1, 2, 3]) {
-    ...
-  }
-
-  const c = [1, 2, 3];
-
-  while (a < b) {
-    ...
-  }
-}
-```
+- Treat any multi-line statement (a long call, chained expression, or large assignment) like a logic block: give it blank lines on both sides, and don't let it butt up against a declaration or one-liner just because it isn't an `if` or loop
+- A declaration that follows a logic block or multi-line statement starts a new group, separated by a blank line
+- Use judgement over mechanical rules: don't split a tight two-line step, and don't leave a dense wall of statements either
 
 ## Maintaining this file
 
