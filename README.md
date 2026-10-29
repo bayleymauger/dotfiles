@@ -44,7 +44,6 @@ paths they occupy under `$HOME`, e.g. `home/.config/nvim/init.lua` ->
 | Neovim | `home/.config/nvim/` | Lua-based, built-in package manager (nvim 0.12+), Rose Pine theme |
 | Zsh | `home/.zshrc` | Manual plugin sourcing (no framework), Starship prompt |
 | Ghostty | `home/.config/ghostty/` | JetBrains Mono, Rose Pine theme, translucent background, cursor shader |
-| OpenCode | `home/.config/opencode/` | Built-in Rosé Pine theme, default model, MCP servers |
 | Agents | `home/AGENTS.md` | Global instructions for coding agents, linked to `~/AGENTS.md` |
 
 ### Shell Stack

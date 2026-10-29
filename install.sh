@@ -183,15 +183,16 @@ STOW_PACKAGE=home
 # repo, so anything an app writes there (lazygit's state.yml, every other app's ~/.config dir)
 # would land in the repo.
 RUNTIME_DIRS=(
+  "$HOME/.agents"
+  "$HOME/.claude"
+  "$HOME/.claude/rules"
   "$HOME/.config"
   "$HOME/.config/git"
   "$HOME/.config/lazygit"
-  "$HOME/.config/opencode"
 )
 
 # pstack's agent skills are installed with the skills CLI. -g puts them in
-# ~/.agents/skills/ (read by OpenCode and other agents). Re-running updates
-# them to the latest version.
+# ~/.agents/skills/. Re-running updates them to the latest version.
 install_pstack_skills() {
   if ! command_exists npx; then
     warn "npx not found - skipping pstack skills"
