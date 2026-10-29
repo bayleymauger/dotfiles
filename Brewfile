@@ -27,6 +27,10 @@ brew "gitleaks"
 brew "ripgrep"
 brew "atlassian/acli/acli", trusted: true
 
+# Coding agents
+cask "claude-code"
+cask "codex"
+
 # Formatters
 brew "stylua"
 brew "prettierd"
