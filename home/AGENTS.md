@@ -12,7 +12,10 @@
   If something clearly looks off, even if it is not directly related to what you are doing, try to get it fixed along the way.
 - Apply that same high standard to engineering excellence: lint, test failures, and test flakiness.
   If you see one, even if it is not caused by what you are working on right now, still get it fixed.
-- Before writing any PR title or description (including every PR a poteto-mode agent or subagent opens), load the `pr-description` skill. It extends poteto-mode's `opening-a-pr` playbook and runs `/technical-writing` and `/unslop` itself.
+- PR descriptions (this overrides any longer template or playbook length guidance): a reviewer who has the diff should get it in 30 seconds.
+  Aim for under 15 lines. Plain words, short sentences, and no identifiers unless they carry the change.
+  Say why the change exists, what it leaves out, what it could break, and the one command or result that proves it works.
+  Cut anything the diff or a link already shows. Skip sections that say nothing, and put long evidence in a linked artifact.
 - Before using "dynamic workflows", "ultra code" or any harness feature that immediately spawns a large swarm of subagents, always explain the tradeoffs and ask the user for explicit approval.
 
 ## Code spacing
