@@ -77,24 +77,6 @@ install_packages_linux() {
   info "Installing packages from Brewfile..."
   brew bundle --file="$DOTFILES_DIR/Brewfile"
   success "All packages installed via Homebrew"
-
-  install_coding_agents_npm
-}
-
-# claude-code and codex are macOS-only casks (see Brewfile), so Linux gets
-# them from npm instead. Node comes from Homebrew, so no sudo is needed.
-install_coding_agents_npm() {
-  if ! command_exists npm; then
-    warn "npm not found - skipping Claude Code and Codex"
-    return
-  fi
-
-  info "Installing Claude Code and Codex via npm..."
-  if npm install -g @anthropic-ai/claude-code @openai/codex; then
-    success "Claude Code and Codex installed"
-  else
-    warn "Claude Code and Codex install failed - re-run ./install.sh to retry"
-  fi
 }
 
 # The font is only rendered by a local terminal emulator. On a headless box
